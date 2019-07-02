@@ -1,0 +1,14 @@
+<logger-settings>
+
+	<default-logger-config level="WARN"
+		log-format="c{0}" />
+
+ 		
+	<logger-config name="com.cks.etot.EnglishTransliterator"
+		level="DEBUG" />
+
+<!-- 
+	<logger-config name="com.cks.etot.LanguageTransliterator"
+		level="DEBUG" />
+	 -->	
+</logger-settings>
