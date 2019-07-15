@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.client.base.view.View;
-import com.ajoy.client.base.view.ViewConfig;
-import com.ajoy.client.base.view.theme1.BaseView;
+import com.ajoy.client.base.view.FXViewBuilder;
+import com.ajoy.client.base.view.FXViewBuilderInfo;
+import com.ajoy.client.base.view.theme1.BaseViewBuilder;
 import com.ajoy.client.codegen.main.UIDataModel;
 import com.ajoy.model.codegen.DBInfo;
 import com.ajoy.model.codegen.ProfileInfo;
@@ -31,14 +31,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 
-public class DatabasesView extends BaseView implements View, EventHandler<ActionEvent>
+public class DatabasesView extends BaseViewBuilder implements FXViewBuilder, EventHandler<ActionEvent>
 {
 	private static Logger log = LogManager.getLogger(DatabasesView.class);
 
 	private GridPane gridPane;
-
-
-	
 	//Textfields
 	private TextField dbUrl;
 	private TextField dbUser;
@@ -68,7 +65,7 @@ public class DatabasesView extends BaseView implements View, EventHandler<Action
 	}
 
 	@Override
-	public Parent createJavaFXParentObject(ViewConfig config) 
+	public Node createFXView(FXViewBuilderInfo fxViewBuilderInfo)	
 	{		
 		newButton = new RadioButton("New");
 		editButton = new RadioButton("Edit");	
@@ -89,7 +86,6 @@ public class DatabasesView extends BaseView implements View, EventHandler<Action
 		Text text5 = new Text("Driver Class");
 		
 		Text text6 = new Text("Use This");
-		
 
 		dbUrl = new TextField();
 		dbUser = new TextField();
@@ -125,8 +121,7 @@ public class DatabasesView extends BaseView implements View, EventHandler<Action
 		labelList.add(text5);
 		labelList.add(text6);
 		labelList.add(new Label(" "));
-		
-		
+				
 		ArrayList<Node> uiObjectList = new ArrayList<Node>();
 		
 		uiObjectList.add(newOrEditBox);
@@ -139,6 +134,7 @@ public class DatabasesView extends BaseView implements View, EventHandler<Action
 		uiObjectList.add(buttonBox);
 
 		gridPane = UIComponentsBuilder.createGrid(labelList, uiObjectList);
+		setFXView(gridPane);
 		return gridPane;
 	}
 
@@ -190,7 +186,7 @@ public class DatabasesView extends BaseView implements View, EventHandler<Action
 		}	
 	}
 
-	public void beforeDisplay()
+	public void aboutToDisplayFXView()
 	{
 		log.info("called before view ");
 		String pInfo = UIDataModel.get().getSelectedProfile();

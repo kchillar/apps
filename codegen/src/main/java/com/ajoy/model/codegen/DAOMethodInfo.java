@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class DAOMethodInfo 
 {
+	
+	public static final String SelectSqlType = "Select";
+	public static final String InsertSqlType = "Insert";
+	public static final String UpdateSqlType = "Update";
+	
 	@XmlAttribute(name="name")
 	private String name;
 	
@@ -46,7 +51,7 @@ public class DAOMethodInfo
 
 	public String toString()
 	{
-		return getName()+" "+ getSqlType();
+		return getName()+" - "+ getSqlType();
 	}
 	
 
@@ -105,7 +110,6 @@ public class DAOMethodInfo
 	public void setDaoName(String daoName) {
 		this.daoName = daoName;
 	}
-	
 	
 	
 	

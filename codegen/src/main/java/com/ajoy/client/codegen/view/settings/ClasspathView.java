@@ -9,9 +9,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.client.base.view.View;
-import com.ajoy.client.base.view.ViewConfig;
-import com.ajoy.client.base.view.theme1.BaseView;
+import com.ajoy.client.base.view.FXViewBuilder;
+import com.ajoy.client.base.view.FXViewBuilderInfo;
+import com.ajoy.client.base.view.theme1.BaseViewBuilder;
 import com.ajoy.client.codegen.main.UIDataModel;
 import com.ajoy.model.codegen.ClassInfo;
 import com.ajoy.model.codegen.Classpath;
@@ -43,7 +43,7 @@ import javafx.stage.DirectoryChooser;
  * @author kalyanc
  *
  */
-public class ClasspathView extends BaseView implements View, EventHandler<ActionEvent>
+public class ClasspathView extends BaseViewBuilder implements FXViewBuilder, EventHandler<ActionEvent>
 {
 	private static Logger log = LogManager.getLogger(ClasspathView.class);
 
@@ -62,7 +62,8 @@ public class ClasspathView extends BaseView implements View, EventHandler<Action
 	{		
 	}
 
-	public Parent createJavaFXParentObject(ViewConfig config)
+	@Override
+	public Node createFXView(FXViewBuilderInfo fxViewBuilderInfo)	
 	{		
 		Text buttonBoxLabel = new Text("");
 		
@@ -82,6 +83,7 @@ public class ClasspathView extends BaseView implements View, EventHandler<Action
 		vbox.getChildren().add(tb);
 		vbox.getChildren().add(gridPane);
 		
+		setFXView(vbox);
 		return vbox;
 	}
 
@@ -223,7 +225,7 @@ public class ClasspathView extends BaseView implements View, EventHandler<Action
 		
 	}
 	
-	public void beforeDisplay()
+	public void aboutToDisplayFXView()
 	{
 		log.info("beforeDisplay() start");
 		String pInfo = UIDataModel.get().getSelectedProfile();

@@ -1,9 +1,14 @@
 package com.ajoy.test;
 
-import com.ajoy.client.base.view.ViewConfig;
+import java.util.Arrays;
+import java.util.List;
+
+import com.ajoy.client.base.view.FXViewBuilderInfo;
 import com.ajoy.client.codegen.main.AppUI;
+import com.ajoy.client.codegen.view.daocode.FromDBColumnsToJavaFieldsMapperComponent;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,7 +16,7 @@ import javafx.stage.Stage;
 public class Test extends Application 
 {    	
 	//private static Logger log = LogManager.getLogger(Test.class);
-	private ViewConfig config;
+	private FXViewBuilderInfo config;
 	private static Log log = new Log(Test.class);
 	 
 	public Test()
@@ -49,14 +54,29 @@ public class Test extends Application
     public void start(Stage stage) throws Exception 
     {
     	log.info("start() start");
-    	TabelViewBuilder builder = new TabelViewBuilder();
-        Parent root = builder.build();      
+    	//TabelViewBuilder builder = new TabelViewBuilder();
+    	//TextListBuilder builder = new TextListBuilder();
+    	FromDBColumnsToJavaFieldsMapperComponent builder = new FromDBColumnsToJavaFieldsMapperComponent(getTableList(), getObjectList());
+        Parent root = (Parent) builder.createComponent();      
         Scene scene = new Scene(root, 500, 500);    
         stage.setTitle("FXML Welcome");
         stage.setScene(scene);
         stage.show();
         log.info("start() end");
     }
+    
+    
+	private static final List<String> getTableList()
+	{
+		return Arrays.asList("t1.c1", "t1.c2", "t2.c1","t2.c2");
+	}
+
+
+	private static final List<String> getObjectList()
+	{
+		return Arrays.asList("in1.f1.f12", "in1.f1.f11", "in1.f1","in2.f1");
+	}
+
 
     /**
      * @param args the command line arguments

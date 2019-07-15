@@ -5,9 +5,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.client.base.view.View;
-import com.ajoy.client.base.view.ViewConfig;
-import com.ajoy.client.base.view.theme1.BaseView;
+import com.ajoy.client.base.view.FXViewBuilder;
+import com.ajoy.client.base.view.FXViewBuilderInfo;
+import com.ajoy.client.base.view.theme1.BaseViewBuilder;
 import com.ajoy.client.codegen.main.UIDataModel;
 import com.ajoy.model.codegen.DAOInfo;
 import com.ajoy.model.codegen.DAOS;
@@ -16,21 +16,24 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-public class DAOView extends BaseView implements View, EventHandler<ActionEvent>
+public class DAOView extends BaseViewBuilder implements FXViewBuilder, EventHandler<ActionEvent>
 {
 	private static Logger log = LogManager.getLogger(DAOView.class);
+	private static final String emptyLabel = "  ";
 
 	private GridPane gridPane;
 	
 	private TextField daoNameField = new TextField();
 	private ComboBox<DAOInfo> daoNameList = new ComboBox<DAOInfo>();
+	private HBox buttonBox = new HBox();
 	private Button add;
 	private Button remove;
 	private Button save;
@@ -40,7 +43,8 @@ public class DAOView extends BaseView implements View, EventHandler<ActionEvent>
 	{		
 	}
 
-	public Parent createJavaFXParentObject(ViewConfig config)
+	@Override
+	public Node createFXView(FXViewBuilderInfo fxViewBuilderInfo)
 	{		
 		gridPane = new GridPane();      
 		gridPane.setMinSize(500, 500); 
@@ -51,30 +55,44 @@ public class DAOView extends BaseView implements View, EventHandler<ActionEvent>
 		gridPane.setAlignment(Pos.TOP_LEFT); 
 		
 		setupButtons();
+		fetchDAOInfoList();
+		
 		Text daoName = new Text("DAO Name");
 		Text daoNameList = new Text("Existing DAO");
 		
 		daoNameField.setMinWidth(60);
 		
-		gridPane.add(daoName, 0, 0);
-		gridPane.add(daoNameField, 1, 0);
-		gridPane.add(add, 2, 0);
+		int row = 0;
+		
+		gridPane.add(daoName, 0, row);
+		gridPane.add(new Text(emptyLabel), 1, row);
+		gridPane.add(daoNameField, 2, row++);
+		
+		row = addEmpty(gridPane, row);
 
-		gridPane.add(daoNameList, 0, 1);
-		gridPane.add(this.daoNameList, 1, 1);
-		gridPane.add(remove, 2, 1);
+		gridPane.add(daoNameList, 0, row);
+		gridPane.add(new Text(emptyLabel), 1, row);
+		gridPane.add(this.daoNameList, 2, row++);
 		
-		String emptyLabel = "        ";
-							
-		gridPane.add(new Text(emptyLabel), 0, 2);
-		gridPane.add(new Text(emptyLabel), 1, 2);
-		gridPane.add(save, 2, 2);
+		row = addEmpty(gridPane, row);
 		
-		fetchDAOInfoList();
+		gridPane.add(new Text(emptyLabel), 0, row);
+		gridPane.add(new Text(emptyLabel), 1, row);
+		gridPane.add(buttonBox, 2, row++);
 		
+		setFXView(gridPane);
 		return gridPane;
 	}
 
+	private int addEmpty(GridPane gp, int row)
+	{
+		gp.add(new Text(emptyLabel), 0, row);
+		gp.add(new Text(emptyLabel), 1, row);
+		gp.add(new Text(emptyLabel), 2, row++);	
+		return row;
+	}
+
+	
 	private void setupButtons()
 	{
 		add = new Button("Add");
@@ -83,6 +101,12 @@ public class DAOView extends BaseView implements View, EventHandler<ActionEvent>
 		remove.setOnAction(this);		
 		save = new Button("Save");
 		save.setOnAction(this);
+		buttonBox.getChildren().add(save);
+		buttonBox.getChildren().add(new Text(emptyLabel));
+		buttonBox.getChildren().add(remove);
+		buttonBox.getChildren().add(new Text(emptyLabel));
+		buttonBox.getChildren().add(add);
+		
 	}
 	
 	private void fetchDAOInfoList()

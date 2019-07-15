@@ -11,11 +11,12 @@ import java.io.FileInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.client.base.view.ViewBuilder;
-import com.ajoy.client.base.view.ViewConfig;
+import com.ajoy.client.base.view.FXViewBuilderInfo;
+import com.ajoy.client.base.view.UIManager;
 import com.ajoy.service.codegen.workflow.DataServiceResources;
 
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 public class AppUI extends Application 
 {    	
 	private static Logger log = LogManager.getLogger(AppUI.class);
-	private ViewConfig config;
+	private FXViewBuilderInfo config;
 	 
 	public AppUI()
 	{
@@ -36,10 +37,8 @@ public class AppUI extends Application
 	
 	public void init()
 	{
-		log.info("init() start");
-		
-		Parameters params = getParameters();
-		
+		log.info("init() start");			
+		Parameters params = getParameters();		
 		if(params != null)
 		{
 			try
@@ -47,11 +46,10 @@ public class AppUI extends Application
 				String viewConfigFile = params.getRaw().get(0);
 				log.debug("Got viewConfigFile: "+viewConfigFile);				
 				FileInputStream fis = new FileInputStream(new File(viewConfigFile));
-				config = ViewConfig.getObjectFromStream(fis);
-				populateViewId(config, null);
+				config = FXViewBuilderInfo.getObjectFromStream(fis);
 				fis.close();
 				log.debug("Got config:");
-				ViewConfig.writeToStream(System.out, config);
+				FXViewBuilderInfo.writeToStream(System.out, config);
 			}
 			catch(Exception exp)
 			{
@@ -62,41 +60,18 @@ public class AppUI extends Application
 		{
 			log.debug("No Params");
 		}
-
-		log.info("init() end");
+		log.info("init() end");		
 	}
-	
-	private void populateViewId(ViewConfig config, String parentPath)
-	{
-		String id ;
-		
-		if(parentPath != null)
-			id = parentPath + "/" + config.getName();
-		else
-			id = "/" + config.getName();
-		
-		if(log.isDebugEnabled())
-			log.debug("--> ID for: "+config.getName()+" is :"+id);
-		
-		config.setId(id);
-		
-		if(config.getChildViewConfigList()!=null)
-		{
-			for(ViewConfig child: config.getChildViewConfigList())
-				populateViewId(child, config.getId());
-		}
-	}
-	
 	
     @Override
     public void start(Stage stage) throws Exception 
     {
     	log.info("start() start");
-    	UIDataModel.get().setStage(stage);
-    	
-        Parent root =  ViewBuilder.buildJavaFXParent(config);    
+    	UIDataModel.get().setStage(stage);    	
+    	Node node = UIManager.buildUI(config);    	
+        Parent root =  (Parent) node;        
         Scene scene = new Scene(root, 500, 500);    
-        stage.setTitle("FXML Welcome");
+        stage.setTitle("'Codegen' - An Utility For Code Generation");
         stage.setScene(scene);
         stage.show();
         log.info("start() end");
@@ -108,16 +83,12 @@ public class AppUI extends Application
     public static void main(String[] args) throws Exception
     {    	
     	//For now Services is in-memory so will launch from the same main as that of UI
-    	launchServices(null);
-    	
+    	launchServices(null);    	
     	AppConfig appConfig = AppConfig.getObjectFromStream(new FileInputStream(new File(args[0])));        	
-    	UIDataModel.init(appConfig); //UIDataModel communicates with DataService using 
-    	
-    	log.info("Got Config:\n"+appConfig.toString());
-        	
+    	UIDataModel.init(appConfig); //UIDataModel communicates with DataService using     	
+    	log.info("Got Config:\n"+appConfig.toString());        	
     	String[] uiArgs = new String[1];
-    	uiArgs[0] = appConfig.getViewConfig();
-        	
+    	uiArgs[0] = appConfig.getViewConfig();        
     	AppUI.launch(uiArgs);
     }
     

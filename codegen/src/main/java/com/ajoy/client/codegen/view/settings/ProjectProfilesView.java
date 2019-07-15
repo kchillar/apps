@@ -6,16 +6,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.client.base.view.View;
-import com.ajoy.client.base.view.ViewConfig;
-import com.ajoy.client.base.view.theme1.BaseView;
+import com.ajoy.client.base.view.FXViewBuilder;
+import com.ajoy.client.base.view.FXViewBuilderInfo;
+import com.ajoy.client.base.view.theme1.BaseViewBuilder;
 import com.ajoy.client.codegen.main.UIDataModel;
 import com.ajoy.model.codegen.ProfileInfo;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -32,7 +31,7 @@ import javafx.scene.text.Text;
  * @author kalyanc
  *
  */
-public class ProjectProfilesView extends BaseView implements View, EventHandler<ActionEvent>
+public class ProjectProfilesView extends BaseViewBuilder implements FXViewBuilder, EventHandler<ActionEvent>
 {
 	private static Logger log = LogManager.getLogger(ProjectProfilesView.class);
 
@@ -61,7 +60,7 @@ public class ProjectProfilesView extends BaseView implements View, EventHandler<
 	}
 
 	@Override
-	public Parent createJavaFXParentObject(ViewConfig config) 
+	public Node createFXView(FXViewBuilderInfo fxViewBuilderInfo)
 	{	
 		newButton = new RadioButton("New");
 		editButton = new RadioButton("Edit");	
@@ -100,6 +99,7 @@ public class ProjectProfilesView extends BaseView implements View, EventHandler<
 
 		gridPane = UIComponentsBuilder.createGrid(labelList, uiObjectList);
 
+		setFXView(gridPane);
 		return gridPane;
 	}
 
@@ -275,7 +275,7 @@ public class ProjectProfilesView extends BaseView implements View, EventHandler<
 		}
 	}
 
-	public void beforeDisplay()
+	public void aboutToDisplayFXView()
 	{
 		log.info("called before view ");
 		String pInfo = UIDataModel.get().getSelectedProfile();
