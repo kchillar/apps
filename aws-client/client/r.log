@@ -1,0 +1,76 @@
+[-2020-04-29T16:46:34,300] [main] [DEBUG] [XMLHelper] - Will read from file: ./conf/resource-initializer-config.xml
+[-2020-04-29T16:46:34,836] [main] [INFO] [AppUI] - init() start
+[-2020-04-29T16:46:34,837] [main] [INFO] [AppUI] - viewId: 0 is the top most view
+[-2020-04-29T16:46:34,838] [main] [INFO] [AppUI] - init() end
+[-2020-04-29T16:46:34,839] [main] [INFO] [AppUI] - createViewsAndHandlers start
+[-2020-04-29T16:46:34,840] [main] [INFO] [AppUI] - creating a view for id: 0
+[-2020-04-29T16:46:34,844] [main] [INFO] [AppUI] - creating a view for id: 1
+[-2020-04-29T16:46:34,845] [main] [INFO] [AppUI] - creating a view for id: 2
+[-2020-04-29T16:46:34,846] [main] [INFO] [AppUI] - creating a view for id: 3
+[-2020-04-29T16:46:34,846] [main] [INFO] [AppUI] - creating a view for id: 1-1
+[-2020-04-29T16:46:34,847] [main] [INFO] [AppUI] - creating a view for id: 1-2
+[-2020-04-29T16:46:34,848] [main] [INFO] [AppUI] - creating a view for id: 1-3
+[-2020-04-29T16:46:34,848] [main] [INFO] [AppUI] - creating a view for id: 1-4
+[-2020-04-29T16:46:34,848] [main] [INFO] [AppUI] - creating a view for id: 2-1
+[-2020-04-29T16:46:34,849] [main] [INFO] [AppUI] - creating a view for id: 2-2
+[-2020-04-29T16:46:34,849] [main] [INFO] [AppUI] - creating a view for id: 2-3
+[-2020-04-29T16:46:34,849] [main] [INFO] [AppUI] - createViewsAndHandlers end
+[-2020-04-29T16:46:34,850] [main] [INFO] [AppUI] - main view start()
+[-2020-04-29T16:46:34,851] [main] [INFO] [ViewImpl] - start()
+[-2020-04-29T16:46:41,032] [main] [INFO] [ViewImpl] - option: 0 got vi.id: 1
+[-2020-04-29T16:46:41,034] [main] [INFO] [ViewImpl] - start()
+[-2020-04-29T16:46:42,740] [main] [INFO] [ViewImpl] - option: 3 got vi.id: 1-4
+[-2020-04-29T16:46:42,741] [main] [INFO] [ViewEventHandlerImpl] - handlingOption(1-4) with params: null
+[-2020-04-29T16:46:46,386] [main] [INFO] [ViewImpl] - option: 0 got vi.id: 1-1
+[-2020-04-29T16:46:48,488] [main] [INFO] [ViewEventHandlerImpl] - handlingOption(1-1) with params: {firstName=s, age=10}
+[-2020-04-29T16:46:51,562] [main] [INFO] [ViewImpl] - end()
+[-2020-04-29T16:46:53,310] [main] [INFO] [ViewImpl] - end()
+[-2020-04-29T16:46:53,311] [main] [INFO] [AppUI] - main view end()
+[-2020-04-29T17:08:58,739] [main] [DEBUG] [XMLHelper] - Will read from file: ./conf/resource-initializer-config.xml
+[-2020-04-29T17:30:32,400] [main] [DEBUG] [XMLHelper] - Will read from file: ./conf/resource-initializer-config.xml
+[-2020-04-29T17:30:32,665] [main] [INFO] [AppUI] - init() start
+[-2020-04-29T17:30:32,665] [main] [INFO] [AppUI] - viewId: 0 is the top most view
+[-2020-04-29T17:30:32,666] [main] [INFO] [AppUI] - init() end
+[-2020-04-29T17:30:32,666] [main] [INFO] [AppUI] - createViewsAndHandlers start
+[-2020-04-29T17:30:32,666] [main] [INFO] [AppUI] - creating a view for id: 0
+[-2020-04-29T17:30:32,669] [main] [INFO] [AppUI] - creating a view for id: 1
+[-2020-04-29T17:30:32,669] [main] [INFO] [AppUI] - creating a view for id: 2
+[-2020-04-29T17:30:32,670] [main] [INFO] [AppUI] - creating a view for id: 3
+[-2020-04-29T17:30:32,671] [main] [INFO] [AppUI] - creating a view for id: 1-1
+[-2020-04-29T17:30:32,672] [main] [INFO] [AppUI] - creating a view for id: 1-2
+[-2020-04-29T17:30:32,672] [main] [INFO] [AppUI] - creating a view for id: 1-3
+[-2020-04-29T17:30:32,673] [main] [INFO] [AppUI] - creating a view for id: 1-4
+[-2020-04-29T17:30:32,675] [main] [INFO] [AppUI] - creating a view for id: 2-1
+[-2020-04-29T17:30:32,675] [main] [INFO] [AppUI] - creating a view for id: 2-2
+[-2020-04-29T17:30:32,676] [main] [INFO] [AppUI] - creating a view for id: 2-3
+[-2020-04-29T17:30:32,676] [main] [INFO] [AppUI] - createViewsAndHandlers end
+[-2020-04-29T17:30:32,676] [main] [INFO] [AppUI] - main view start()
+[-2020-04-29T17:30:32,676] [main] [INFO] [ViewImpl] - start()
+[-2020-04-29T17:30:34,974] [main] [INFO] [ViewImpl] - option: 0 got vi.id: 1
+[-2020-04-29T17:30:34,975] [main] [INFO] [ViewImpl] - start()
+[-2020-04-29T17:30:37,044] [main] [INFO] [ViewImpl] - option: 0 got vi.id: 1-1
+[-2020-04-29T17:30:38,853] [main] [INFO] [ViewEventHandlerImpl] - Handled event: {uuId:1588161638853, viewId: 1-1, eventData: {firstName=s, age=10}}
+[-2020-04-29T17:33:24,050] [main] [INFO] [ViewImpl] - end()
+[-2020-04-29T17:33:25,032] [main] [INFO] [ViewImpl] - end()
+[-2020-04-29T17:33:25,032] [main] [INFO] [AppUI] - main view end()
+[-2020-04-29T18:24:11,584][main][DEBUG][XMLHelper] - Will read from file: ./conf/resource-initializer-config.xml
+[-2020-04-29T18:24:11,813][main][INFO][AppUI] - init() start
+[-2020-04-29T18:24:11,814][main][INFO][AppUI] - viewId: 0 is the top most view
+[-2020-04-29T18:24:11,814][main][INFO][AppUI] - init() end
+[-2020-04-29T18:24:11,814][main][INFO][AppUI] - createViewsAndHandlers start
+[-2020-04-29T18:24:11,815][main][INFO][AppUI] - creating a view for id: 0
+[-2020-04-29T18:24:11,818][main][INFO][AppUI] - creating a view for id: 1
+[-2020-04-29T18:24:11,819][main][INFO][AppUI] - creating a view for id: 2
+[-2020-04-29T18:24:11,819][main][INFO][AppUI] - creating a view for id: 3
+[-2020-04-29T18:24:11,820][main][INFO][AppUI] - creating a view for id: 1-1
+[-2020-04-29T18:24:11,820][main][INFO][AppUI] - creating a view for id: 1-2
+[-2020-04-29T18:24:11,821][main][INFO][AppUI] - creating a view for id: 1-3
+[-2020-04-29T18:24:11,821][main][INFO][AppUI] - creating a view for id: 1-4
+[-2020-04-29T18:24:11,821][main][INFO][AppUI] - creating a view for id: 2-1
+[-2020-04-29T18:24:11,822][main][INFO][AppUI] - creating a view for id: 2-2
+[-2020-04-29T18:24:11,823][main][INFO][AppUI] - creating a view for id: 2-3
+[-2020-04-29T18:24:11,823][main][INFO][AppUI] - createViewsAndHandlers end
+[-2020-04-29T18:24:11,823][main][INFO][AppUI] - main view start()
+[-2020-04-29T18:24:11,824][main][INFO][ViewImpl] - start()
+[-2020-04-29T18:24:13,078][main][INFO][ViewImpl] - end()
+[-2020-04-29T18:24:13,078][main][INFO][AppUI] - main view end()

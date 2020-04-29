@@ -1,0 +1,11 @@
+<resource-initializer-config>
+
+<!-- 
+	<resource-config id="AWSClientResource"
+		resource-class="com.pmc.aws.client.AWSClientResource" config-file="aws-client-resource-config.xml" />
+ -->
+
+	<resource-config id="AppUI"
+		resource-class="com.pmc.fw.view.AppUI" config-file="app-ui-config.xml" />
+
+</resource-initializer-config>
