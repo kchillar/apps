@@ -1,6 +1,0 @@
-<aws-client-config>
-
-  <region name="ap-south-1" />
-  <access-key key-id="AKIAQRLIMIIDUZMI2R6T" s-key-id="gfsJPSU1PNGeiTGyi6X4NnxRfrX6WEfux25leCYc" />
-  
-</aws-client-config>
