@@ -20,7 +20,7 @@ import com.pmc.fw.xml.XMLHelper;
 public class AppUI implements Resource
 {
 	private static Logger log = LoggerFactory.getLogger(AppUI.class);
-	private AppUIConfig viewConfig;
+	private AppUIConfig appUIConfig;
 	
 	private ArrayList<ViewConfig> viewInfoList = new ArrayList<>();
 	private Map<String, ViewConfig> viewInfoMap = new HashMap<>();	
@@ -41,8 +41,8 @@ public class AppUI implements Resource
 		
 		try
 		{
-			this.viewConfig = (AppUIConfig) XMLHelper.getObjectFromInputStream(AppUIConfig.class, configStream);
-			viewHandler = (ViewEventHandler) Class.forName(viewConfig.getEventHandlerClassname()).newInstance();
+			this.appUIConfig = (AppUIConfig) XMLHelper.getObjectFromInputStream(AppUIConfig.class, configStream);
+			viewHandler = (ViewEventHandler) Class.forName(appUIConfig.getEventHandlerClassname()).newInstance();
 			this.init();
 			this.createViewsAndHandlers();			
 			this.start();
@@ -59,9 +59,9 @@ public class AppUI implements Resource
 	{
 		log.info("init() start");
 		
-		if(viewConfig.getViews() != null)
+		if(appUIConfig.getViews() != null)
 		{
-			for(ViewConfig vi: viewConfig.getViews())
+			for(ViewConfig vi: appUIConfig.getViews())
 			{
 				if(viewInfoMap.get(vi.getId()) == null)
 					viewInfoMap.put(vi.getId(), vi);
@@ -102,16 +102,20 @@ public class AppUI implements Resource
 			}
 
 			log.info("creating a view for id: "+vi.getId());
-			View view = createNewView();
+			View view = createNewView(vi);
 			view.init(vi, childList, viewMap, viewHandler);
 			viewMap.put(vi.getId(), view);
 		}	
 		log.info("createViewsAndHandlers end");		
 	}
 	
-	private View createNewView() throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	private View createNewView(ViewConfig vc) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
-		View view = (View) Class.forName(viewConfig.getViewImplClass()).newInstance();
+		View view ;
+		if(vc.getViewClass() != null)		
+			view = (View) Class.forName(vc.getViewClass()).newInstance();
+		else
+			view = (View) Class.forName(appUIConfig.getViewImplClass()).newInstance();
 		return view;
 	}
 	

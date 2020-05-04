@@ -21,7 +21,7 @@ public class DBInfo extends BaseInfo
 	 * 
 	 */
 	private static final long serialVersionUID = -1389180406892937328L;
-		
+	private String schemaName;	
 	
 	@XmlAttribute(name="name")
 	private String name = DefaultDBName;
@@ -79,6 +79,14 @@ public class DBInfo extends BaseInfo
 
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
+	}
+
+	public String getSchemaName() {
+		return schemaName;
+	}
+
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 
 

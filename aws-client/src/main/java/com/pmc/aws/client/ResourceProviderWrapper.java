@@ -7,7 +7,7 @@ public class ResourceProviderWrapper
 {
 	public static final String AWSClientResource = "AWSClientResource";
 	
-	public AWSClientResource getAWSViewHandler()
+	public static AWSClientResource getAWSClientResources()
 	{
 		Resource r = ResourceProvider.getResource(AWSClientResource);
 		return ((AWSClientResource)r);

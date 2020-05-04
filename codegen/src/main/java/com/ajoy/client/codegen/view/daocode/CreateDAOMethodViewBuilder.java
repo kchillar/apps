@@ -20,7 +20,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -206,7 +205,7 @@ public class CreateDAOMethodViewBuilder extends BaseViewBuilder implements FXVie
 		list.add("Insert");
 		list.add("Select");
 		list.add("Update");
-		list.add("Prodcedure");
+		//list.add("Prodcedure");
 		sqlTypeList.getItems().addAll(list);
 	}
 

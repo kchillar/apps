@@ -8,6 +8,7 @@ import com.pmc.fw.view.ViewEvent;
 public class ViewEventImpl implements ViewEvent
 {
 	private long UUId;
+	private String eventId;
 	private String viewId;
 	private View view;
 	private Map<String, Object> eventData;
@@ -18,10 +19,11 @@ public class ViewEventImpl implements ViewEvent
 		UUId = System.currentTimeMillis();
 	}
 
-	public ViewEventImpl(String viewId, View view, Map<String, Object> eventData)
+	public ViewEventImpl(String viewId, String eventId, View view, Map<String, Object> eventData)
 	{
 		UUId = System.currentTimeMillis();
 		setViewId(viewId);
+		setEventId(eventId);
 		setView(view);
 		setEventData(eventData);
 	}
@@ -54,6 +56,14 @@ public class ViewEventImpl implements ViewEvent
 	}
 	public void setEventData(Map<String, Object> eventData) {
 		this.eventData = eventData;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 
 	

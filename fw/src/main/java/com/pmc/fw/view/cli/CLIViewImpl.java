@@ -85,11 +85,11 @@ public class CLIViewImpl extends ViewImpl
 			{
 				if (option.equals(i + "")) 
 				{
-					ViewConfig vi = getChildList().get(i);
-					log.info("option: " + option + " got vi.id: " + vi.getId());
-					if (vi.isNotLeafView()) 
+					ViewConfig vc = getChildList().get(i);
+					log.info("option: " + option + " got vi.id: " + vc.getId());
+					if (vc.isNotLeafView()) 
 					{
-						View ic = getViewMap().get(vi.getId());
+						View ic = getViewMap().get(vc.getId());
 						ic.startInteraction();
 						break;
 					} 
@@ -97,14 +97,14 @@ public class CLIViewImpl extends ViewImpl
 					{	
 						Map<String, Object> map = null;
 
-						if(vi.getInputParams() != null)
+						if(vc.getInputParams() != null)
 						{
 							map = new HashMap<String, Object>();
-							for(Param p: vi.getInputParams())							
+							for(Param p: vc.getInputParams())							
 								readParamIntoMap(p, map);															
 						}	
 						
-						ViewEvent event = new ViewEventImpl(vi.getId(),this, map);						
+						ViewEvent event = new ViewEventImpl(vc.getId(), vc.getEventId(), this, map);						
 						ResponseCode code = getViewHandler().handleEvent(event);
 						break;
 					}

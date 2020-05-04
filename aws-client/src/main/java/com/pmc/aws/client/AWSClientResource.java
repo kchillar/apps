@@ -1,4 +1,4 @@
-package com.pmc.aws.client;
+									package com.pmc.aws.client;
 
 import java.io.InputStream;
 
@@ -10,6 +10,7 @@ import com.pmc.fw.resources.Resource;
 import com.pmc.fw.xml.XMLHelper;
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -20,6 +21,7 @@ public class AWSClientResource implements Resource
 	private AWSClientConfig config;
 	private Region region;
 	private AwsCredentialsProvider credentialProvider;
+	private AwsBasicCredentials credentials;
 
 	
 	public AWSClientResource()
@@ -34,11 +36,10 @@ public class AWSClientResource implements Resource
 		try
 		{
 			AWSClientConfig aConfig = (AWSClientConfig) XMLHelper.getObjectFromInputStream(AWSClientConfig.class, configStream);
-			this.setConfig(aConfig);
-			
+			this.setConfig(aConfig);			
 			setRegion(Region.of(config.getRegionConfig().getName()));
-			AwsBasicCredentials creds = AwsBasicCredentials.create(config.getAccessKey().getKeyId(),config.getAccessKey().getsKeyId());
-			setCredentialProvider(StaticCredentialsProvider.create(creds));
+			credentials = AwsBasicCredentials.create(config.getAccessKey().getKeyId(),config.getAccessKey().getsKeyId());
+			setCredentialProvider(StaticCredentialsProvider.create(credentials));
 			code.setSuccess(true);
 		}
 		catch(Exception exp)
@@ -55,9 +56,14 @@ public class AWSClientResource implements Resource
 		return config;
 	}
 
-	public AwsCredentialsProvider getCredentialProvider() 
+	public AwsCredentialsProvider getCredentialProvider()
 	{
 		return credentialProvider;
+	}
+	
+	public AwsCredentials getCredentials() 
+	{
+		return credentials;
 	}
 
 	public Region getRegion() {

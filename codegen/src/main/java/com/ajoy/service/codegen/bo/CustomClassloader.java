@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,24 +44,34 @@ public class CustomClassloader extends ClassLoader
    @Override
    public Class<?> loadClass(String name) throws ClassNotFoundException 
    {
-	   log.info("Loading Class '" + name + "'");
        ClasspathEntry entry = map.get(name);
-       	                 
+              
        if(entry != null && entry.getType() == 0)
-       {    	   
+       {    	
+    	   log.info("using custom loader for: "+name);
     	   return getClass(name);
        }
        else 
        {
+    	   log.info("using parent loader for: "+name);
     	   return super.loadClass(name);
        }
    }
     
+   
+   private Map<String, Class<?>> cache = new HashMap<>();
+   
     /**
      * 
      */
     private Class<?> getClass(String name) throws ClassNotFoundException 
     {   
+    	Class<?> c = cache.get(name);
+    	
+    	if(c!=null)
+    		return c;
+    	
+    	
     	ClasspathEntry entry = map.get(name);
         
         byte[] b = null;
@@ -68,8 +79,9 @@ public class CustomClassloader extends ClassLoader
         {
         	File file = new File(entry.getPath());
             b = loadClassFileData(file);
-            Class<?> c = defineClass(name, b, 0, b.length);
+            c = defineClass(name, b, 0, b.length);
             resolveClass(c);
+            cache.put(name, c);
             return c;
         }
         catch (IOException e) 

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,8 +26,8 @@ import com.ajoy.service.codegen.workflow.DataServiceResources;
 public class BaseDAO 
 {
 	private static Logger log = LogManager.getLogger(BaseDAO.class);
-	
-	
+	private Connection connection;
+		
 	private HashMap<String, JAXBContext> jaxbContextMap = new HashMap<String, JAXBContext>();
 	private HashMap<String, Marshaller> marshallerMap = new HashMap<String, Marshaller>();
 	private HashMap<String, Unmarshaller> unmarshallerMap = new HashMap<String, Unmarshaller>();
@@ -161,4 +162,13 @@ public class BaseDAO
 		return DataServiceResources.get().getDataDir();
 	}
 
+	public Connection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(Connection connection) {
+		this.connection = connection;
+	}
+
+	
 }

@@ -3,6 +3,7 @@ package com.ajoy.service.codegen.bo;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,12 +72,25 @@ public class ClasspathBO extends BaseBO
 		log.info("getClassInfo() start "+classInfo.getName());	
 		ResponseCode<ClassInfo> code = new ResponseCode<>();		
 		code.setObject(classInfo);
-		classInfo.setFieldList(new ArrayList<FieldInfo>());
-		
+				
 		try
 		{
-			Class objClass = getClassLoader(context).loadClass(classInfo.getName());
-			processClass(objClass, classInfo);
+			classInfo.setClassname(classInfo.getName());
+			
+			processFieldInfo(classInfo, context);
+			
+			
+			ArrayList<String> list = new ArrayList<>();
+			
+			if(classInfo.getFieldList() != null)
+				for(FieldInfo childInfo: classInfo.getFieldList())
+					populateList(null, list, childInfo);
+			
+			for(String path: list)
+			{
+				log.info("Path: "+path);
+			}
+			
 			code.setSuccess(true);
 		}
 		catch(Exception exp)
@@ -88,9 +102,40 @@ public class ClasspathBO extends BaseBO
 	}
 
 	
-	private void processClass(Class objClass, ClassInfo classInfo)
+	private void processFieldInfo(FieldInfo fieldInfo, CallContext context)
 	{
-		log.info("processingFields for class: "+objClass.getName());
+		log.info("processFieldInfo() start "+fieldInfo.getName());	
+				
+		try
+		{			
+			Class<?> objClass = getClassLoader(context).loadClass(fieldInfo.getClassname());				
+						
+			processClass(objClass, fieldInfo, context);
+												
+			Class<?> superClass = objClass.getSuperclass();
+			
+			if( (superClass != null) && (superClass != Object.class))
+			{
+				log.info("Super Class "+superClass.getName()+" for "+fieldInfo.getName()+" class: "+fieldInfo.getName());
+				processClass(superClass, fieldInfo, context);
+			}
+		}
+		catch(Exception exp)
+		{
+			log.error("Error ", exp);
+		}
+		log.info("processFieldInfo() end "+fieldInfo.getName());
+		return;
+	}
+
+	
+	private void processClass(Class<?> objClass, FieldInfo fieldInfo, CallContext context)
+	{
+		log.info("processClass() start "+objClass.getName()+" for fieldName: "+fieldInfo.getName());	
+		
+		if(fieldInfo.getFieldList() == null)
+			fieldInfo.setFieldList(new ArrayList<FieldInfo>());
+		
 		Field[] fields = objClass.getDeclaredFields();		
 		for(Field field: fields)
 		{
@@ -100,19 +145,38 @@ public class ClasspathBO extends BaseBO
 			f.setClassname(field.getType().getName());		
 			
 			if(isUserDefinedClass(field.getType().getName()))
+			{					
 				f.setUserDefined(true);
-			
-			classInfo.getFieldList().add(f);
+				log.info("found User Defined Class: "+objClass.getName());
+				processFieldInfo(fieldInfo, context);
+				log.info("end User Defined Class: "+objClass.getName());
+			}
+								
+			fieldInfo.getFieldList().add(f);
 		}
+
+		log.info("processClass() end "+objClass.getName());
+	}
+	
+	
+	private void populateList(String parentPath, List<String> list, FieldInfo fInfo)
+	{
+		log.info("parentPath: "+parentPath);
 		
-		Class superClass = objClass.getSuperclass();
+		if(parentPath != null)		
+			parentPath = parentPath+"."+fInfo.getName();			
+		else
+			parentPath = fInfo.getName();
 		
-		if( (superClass != null) && (superClass != Object.class))
+		list.add(parentPath);
+		
+		if(fInfo.getFieldList() != null)
+		for(FieldInfo info: fInfo.getFieldList())
 		{
-			log.info("adding fields of super class "+superClass.getName());
-			processClass(superClass, classInfo);
+			populateList(parentPath, list, info);
 		}
 	}
+	
 	
 	private ClassloaderBuilder getClassloaderBuilder(CallContext context)
 	{

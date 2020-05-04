@@ -10,30 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="class")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ClassInfo 
+public class ClassInfo extends FieldInfo
 {
-	@XmlAttribute(name="classname")
-	private String classname;
-	
-	@XmlElementRef(name="field")
-	private List<FieldInfo> fieldList; 
-
-	
-	public String getName() {
-		return classname;
-	}
-	public void setName(String name) 
-	{
-		this.classname = name;
-	}
-
-	public List<FieldInfo> getFieldList() {
-		return fieldList;
-	}
-	public void setFieldList(List<FieldInfo> fieldList) {
-		this.fieldList = fieldList;
-	}
-
-	
 
 }

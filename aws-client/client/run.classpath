@@ -1,5 +1,9 @@
+#######################################################################
+# AUTO GENERATED FILE USING ./cpgen.sh Timestamp: 2020-04-30-14:57:25 #
+#######################################################################
+
 M2_REPO=$HOME/.m2/repository
-CLASSPATH="\
+CLASSPATH="../bin:./conf:$M2_REPO/org/apache/logging/log4j/log4j-slf4j-impl/2.11.2/log4j-slf4j-impl-2.11.2.jar:$M2_REPO/org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar:$M2_REPO/org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar:\
 $M2_REPO/com/pmc/fw/pmc-fw/1.0.0/pmc-fw-1.0.0.jar:\
 $M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:\
 $M2_REPO/software/amazon/awssdk/s3/2.13.3/s3-2.13.3.jar:\

@@ -25,6 +25,12 @@ public class ViewConfig
 	@XmlAttribute(name="not-leaf")
 	private boolean isNotLeafView = false;
 	
+	@XmlAttribute(name="view-class")
+	private String viewClass;
+	
+	@XmlAttribute(name="event-id")
+	private String eventId;
+	
 	@XmlElementWrapper(name="inputs")
 	@XmlElement(name="param")
 	private List<Param> inputParams;
@@ -78,6 +84,24 @@ public class ViewConfig
 
 	public void setInputParams(List<Param> inputParams) {
 		this.inputParams = inputParams;
+	}
+
+	
+	
+	public String getViewClass() {
+		return viewClass;
+	}
+
+	public void setViewClass(String viewClass) {
+		this.viewClass = viewClass;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 
 	public String toString()
