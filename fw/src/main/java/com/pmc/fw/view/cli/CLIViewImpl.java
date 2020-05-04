@@ -3,7 +3,6 @@ package com.pmc.fw.view.cli;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,8 +14,6 @@ import com.pmc.fw.model.ViewEventImpl;
 import com.pmc.fw.view.View;
 import com.pmc.fw.view.ViewConfig;
 import com.pmc.fw.view.ViewEvent;
-import com.pmc.fw.view.ViewEventHandler;
-import com.pmc.fw.view.ViewEventHandlerImpl;
 import com.pmc.fw.view.ViewImpl;
 
 
@@ -33,26 +30,30 @@ public class CLIViewImpl extends ViewImpl
 
 	public CLIViewImpl() 
 	{
+		setReader(new BufferedReader(new InputStreamReader(System.in)));
 	}
 
+	/*
 	public ResponseCode init(ViewConfig vInfo, List<ViewConfig> childList, Map<String, View> viewMap, ViewEventHandler handler) 
 	{		
 		ResponseCode code = super.init(vInfo, childList, viewMap, handler);		
 		setReader(new BufferedReader(new InputStreamReader(System.in)));
 		return code;
 	}
+	*/
 
+	
 	public String presentMenuAndGetSelection() 
 	{
 		try 
 		{
 			String option = "";
 			while ("".equals(option)) 
-			{
-				System.out.println("Q -- To exit ");
+			{				
 				for (int i = 0; i < getChildList().size(); i++)
 					System.out.println(
-							i + " -- " + getChildList().get(i).getLabel() + "(" + getChildList().get(i).getId() + ")");
+							i + " -- " + getChildList().get(i).getLabel() + " ( event-id:"+getChildList().get(i).getEventId()+", view-id: " + getChildList().get(i).getId() +" )");
+				System.out.println("Q -- To exit ");
 				System.out.print("Please enter an option: ");
 				option = getReader().readLine();
 				option = option.trim();
@@ -160,4 +161,6 @@ public class CLIViewImpl extends ViewImpl
 			}
 		}
 	}
+
+
 }

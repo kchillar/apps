@@ -1,4 +1,4 @@
-package com.pmc.aws.client;
+package com.pmc.aws.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

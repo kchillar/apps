@@ -15,14 +15,19 @@ public class ResourceInitializer
 	public static Logger log = LoggerFactory.getLogger(ResourceInitializer.class);
 	private static final String ConfigFileName = "resource-initializer-config.xml";
 	private ResourceInitializerConfig config;
-	private File baseDir;
+	private static File baseDir;
 		
-	public ResourceInitializer(String baseDir) throws IOException
+	public ResourceInitializer(String baseDirName) throws IOException
 	{
-		this.baseDir = new File(baseDir);
+		baseDir = new File(baseDirName);
 		File configFile = new File(this.baseDir,ConfigFileName);					
 		config = (ResourceInitializerConfig) XMLHelper.getObjectFromFile(ResourceInitializerConfig.class, configFile);		
 		init();
+	}
+	
+	public static File getResourcesBaseDir()
+	{
+		return baseDir;
 	}
 	
 	public void init()

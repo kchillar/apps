@@ -1,16 +1,16 @@
-package com.pmc.aws.client;
+package com.pmc.aws.client.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.pmc.aws.client.s3.S3Helper;
+import com.pmc.aws.client.helper.S3Helper;
 import com.pmc.fw.model.ResponseCode;
 import com.pmc.fw.view.ViewEvent;
 import com.pmc.fw.view.ViewEventHandler;
 
-public class AWSViewEventHandler implements ViewEventHandler 
+public class S3ViewEventHandler implements ViewEventHandler 
 {
-	public static Logger log = LoggerFactory.getLogger(AWSViewEventHandler.class);
+	public static Logger log = LoggerFactory.getLogger(S3ViewEventHandler.class);
 	
 	private static final String ListS3Bucket = "List-S3-Bucket";
 	private static final String CreateS3Bucket = "Create-S3-Bucket";

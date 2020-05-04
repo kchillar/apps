@@ -1,0 +1,12 @@
+<view-config>
+
+	<view-class>com.pmc.fw.view.cli.CLIViewImpl</view-class>
+	<event-handler-class>com.pmc.aws.client.view.LambdaViewEventHandler</event-handler-class>
+	
+	<view-config  label="Show existing Lambda" event-id="List-Lambdas" />
+	<view-config  label="Create new Lambda" event-id="Create-Lambda" />
+	<view-config  label="Execute a Lambda"  event-id="Execute-Lambda" />
+
+	
+</view-config>
+

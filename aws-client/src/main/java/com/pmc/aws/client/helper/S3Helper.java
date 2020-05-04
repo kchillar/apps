@@ -1,4 +1,4 @@
-package com.pmc.aws.client.s3;
+package com.pmc.aws.client.helper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pmc.aws.client.AWSClientResource;
-import com.pmc.aws.client.AWSViewEventHandler;
 import com.pmc.aws.client.ResourceProviderWrapper;
+import com.pmc.aws.client.view.S3ViewEventHandler;
 
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
@@ -39,7 +39,7 @@ import software.amazon.awssdk.services.s3.model.UploadPartRequest;
 
 public class S3Helper 
 {
-	public static Logger log = LoggerFactory.getLogger(AWSViewEventHandler.class);
+	public static Logger log = LoggerFactory.getLogger(S3ViewEventHandler.class);
 
 	public S3Helper()
 	{

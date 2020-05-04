@@ -1,0 +1,9 @@
+<view-config>
+	<view-class>com.pmc.fw.view.cli.CLIViewImpl</view-class>
+	
+	
+	 
+	<view-config label="S3 Services" view-dir="s3"  not-leaf="true" event-id="s3"/>
+	<view-config label="Lambda Services" view-dir="lambda" not-leaf="true" event-id="lambda"/>
+</view-config>
+

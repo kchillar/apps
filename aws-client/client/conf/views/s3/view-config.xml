@@ -1,0 +1,62 @@
+<view-config>
+
+	<view-class>com.pmc.fw.view.cli.CLIViewImpl</view-class>
+	<event-handler-class>com.pmc.aws.client.view.S3ViewEventHandler</event-handler-class>
+
+	<view-config label="List existing S3 buckets" event-id="List-S3-Bucket" />
+
+	<view-config label="Create new S3 bucket" event-id="Create-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="regionId" value="ap-south-1" type="s" />			
+			</inputs>
+	</view-config>
+
+	<view-config label="List keys in a S3 bucket" event-id="List-Keys-In-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />				
+			</inputs>
+	</view-config>
+
+	<view-config label="Create a key in S3 bucket from file" event-id="Create-Key-In-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="key" value="/key1" type="s" />
+				<param name="filePathToUpload" value="./in/key-k1.txt" type="s" />			
+			</inputs>
+	</view-config>
+
+	<view-config label="Create a key in S3 bucket from file using MultiPart if the upload size > 5MB" event-id="Create-Key-In-S3-Bucket-Multipart">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="key" value="/key1" type="s" />
+				<param name="filePathToUpload" value="./in/key-k1.txt" type="s" />			
+			</inputs>
+	</view-config>
+	
+	<view-config label="Download content of a key in S3 bucket to a file" event-id="Get-Content-For-Key-In-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="key" value="/key1" type="s" />
+				<param name="downloadContentToFile" value="./out/s3-key.txt" type="s" />			
+			</inputs>
+	</view-config>
+
+	<view-config label="Delete content of a key in S3 bucket" event-id="Delete-Key-In-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="key" value="/key1" type="s" />			
+			</inputs>
+	</view-config>
+	
+
+	<view-config label="Delete S3 bucket" event-id="Delete-S3-Bucket">
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />			
+			</inputs>
+	</view-config>
+
+
+	
+</view-config>
+

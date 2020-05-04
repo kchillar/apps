@@ -17,7 +17,7 @@ public abstract class ViewImpl implements View
 {
 	public static Logger log = LoggerFactory.getLogger(ViewImpl.class);	
 
-	private List<ViewConfig> childList;	
+	private ViewConfig viewConfig;
 	private Map<String, View> viewMap ;	
 	private ViewEventHandler viewHandler;
 
@@ -25,25 +25,22 @@ public abstract class ViewImpl implements View
 	{		
 	}
 		
-	public ResponseCode init(ViewConfig vInfo, List<ViewConfig> childList, Map<String, View> viewMap, ViewEventHandler viewHandler)
+	public ResponseCode init(ViewConfig viewConfig,  Map<String, ViewConfig> viewConfigMap, Map<String, View> viewMap, ViewEventHandler viewHandler)
 	{		
 		ResponseCode code = new ResponseCode();
+		this.setViewConfig(viewConfig);
 		this.setViewMap(viewMap);
-		this.setChildList(childList);		
 		this.viewHandler = viewHandler;
 		code.setSuccess(true);
 		return code;
 	}
 			
+
 	
 	public abstract void startInteraction() ;
 		
 	protected List<ViewConfig> getChildList() {
-		return childList;
-	}
-
-	protected void setChildList(List<ViewConfig> childList) {
-		this.childList = childList;
+		return getViewConfig().getChildViewConfigs();
 	}
 
 	protected Map<String, View> getViewMap() {
@@ -64,5 +61,14 @@ public abstract class ViewImpl implements View
 		this.viewHandler = viewHandler;
 	}
 
+	public ViewConfig getViewConfig() {
+		return viewConfig;
+	}
+
+	public void setViewConfig(ViewConfig viewConfig) {
+		this.viewConfig = viewConfig;
+	}
+
+	
 }
 

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pmc.aws.model.AWSClientConfig;
 import com.pmc.fw.model.ResponseCode;
 import com.pmc.fw.resources.Resource;
 import com.pmc.fw.xml.XMLHelper;

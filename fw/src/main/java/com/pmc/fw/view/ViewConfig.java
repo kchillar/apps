@@ -15,27 +15,33 @@ import com.pmc.fw.model.Param;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ViewConfig
 {
-	@XmlAttribute(name="parent-id")
-	private String parentId;
 	@XmlAttribute(name="id")
-	private String id;
+	private String id = "";
 	@XmlAttribute(name="label")
 	private String Label;
 	
 	@XmlAttribute(name="not-leaf")
 	private boolean isNotLeafView = false;
 	
-	@XmlAttribute(name="view-class")
+	@XmlElement(name="view-class")
 	private String viewClass;
-	
+
+	@XmlElement(name="event-handler-class")
+	private String eventHandlerClassname;
+		
 	@XmlAttribute(name="event-id")
 	private String eventId;
 	
 	@XmlElementWrapper(name="inputs")
 	@XmlElement(name="param")
 	private List<Param> inputParams;
+		
+	@XmlAttribute(name="view-dir")
+	private String viewDir;
 	
-	
+	@XmlElement(name="view-config")
+	private List<ViewConfig> childViewConfigs;
+ 	
 	public ViewConfig()
 	{		
 	}
@@ -62,13 +68,6 @@ public class ViewConfig
 		this.Label = desc;
 	}
 
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
 	
 	public boolean isNotLeafView() {
 		return isNotLeafView;
@@ -87,7 +86,6 @@ public class ViewConfig
 	}
 
 	
-	
 	public String getViewClass() {
 		return viewClass;
 	}
@@ -102,6 +100,34 @@ public class ViewConfig
 
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
+	}
+		
+	
+
+	public String getViewDir() {
+		return viewDir;
+	}
+
+	public void setViewDir(String viewDir) {
+		this.viewDir = viewDir;
+	}
+
+	public String getEventHandlerClassname() {
+		return eventHandlerClassname;
+	}
+
+	public void setEventHandlerClassname(String eventHandlerClassname) {
+		this.eventHandlerClassname = eventHandlerClassname;
+	}
+
+	
+	
+	public List<ViewConfig> getChildViewConfigs() {
+		return childViewConfigs;
+	}
+
+	public void setChildViewConfigs(List<ViewConfig> childViewConfigs) {
+		this.childViewConfigs = childViewConfigs;
 	}
 
 	public String toString()

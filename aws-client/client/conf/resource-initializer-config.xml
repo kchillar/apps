@@ -5,7 +5,7 @@
 		resource-class="com.pmc.aws.client.AWSClientResource" config-file="aws-client-resource-config.xml" />
 
 
-	<resource-config id="AppUI"
-		resource-class="com.pmc.fw.view.AppUI" config-file="app-ui-config.xml" />
+	<resource-config id="ViewInitializer"
+		resource-class="com.pmc.fw.view.ViewInitializer" config-file="view-initializer-config.xml" />
 
 </resource-initializer-config>
