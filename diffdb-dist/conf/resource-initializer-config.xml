@@ -1,0 +1,11 @@
+<resource-initializer-config>
+
+	<resource-config id="DBConnectionManager"
+		resource-class="com.pmc.fw.db.DBConnectionManagerImpl" config-file="db-config.xml" />
+
+      <resource-config id="ViewInitializer"
+		resource-class="com.pmc.fw.view.ViewInitializer" config-file="view-initializer-config.xml" />
+
+
+
+</resource-initializer-config>

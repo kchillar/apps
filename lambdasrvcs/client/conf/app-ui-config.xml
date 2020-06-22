@@ -1,0 +1,28 @@
+<app-ui-config>
+
+	<view-impl-class>com.pmc.fw.view.cli.CLIViewImpl</view-impl-class>
+	<event-handler-class>com.pmc.aws.client.AWSViewEventHandler</event-handler-class>
+
+	<view-config id="0" label="App View" not-leaf="true" />
+	<view-config id="1" parent-id="0" label="S3 Services" not-leaf="true" />
+	<view-config id="2" parent-id="0" label="Lambda Services" not-leaf="true" />
+	<view-config id="3" parent-id="0" label="Set preferences" />
+
+	<view-config id="1-1" parent-id="1" label="Show existing S3 buckets" event-id="S3-Get">
+		<inputs>
+			<param name="firstName" value="s" type="s" />
+			<param name="age" value="10" type="i" />
+		</inputs>
+	</view-config>
+
+	<view-config id="1-2" parent-id="1" label="Create new S3 bucket" />
+	<view-config id="1-3" parent-id="1" label="Add content to S3 bucket" />
+	<view-config id="1-4" parent-id="1" label="Get content from S3 bucket" />
+
+	<view-config id="2-1" parent-id="2" label="Show existing Lambda" />
+	<view-config id="2-2" parent-id="2" label="Create new Lambda" />
+	<view-config id="2-3" parent-id="2" label="Execute a Lambda" />
+
+	
+</app-ui-config>
+

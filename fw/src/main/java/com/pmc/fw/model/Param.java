@@ -15,6 +15,10 @@ public class Param
 	private String value;
 	@XmlAttribute(name="type")
 	private String type;
+	
+	@XmlAttribute(name="attribute")
+	private boolean isAttribute = false;
+	
 	public String getName() {
 		return name;
 	}
@@ -34,8 +38,14 @@ public class Param
 		this.type = type;
 	}
 	
+	public boolean isAttribute() {
+		return isAttribute;
+	}
+	public void setAttribute(boolean isAttribute) {
+		this.isAttribute = isAttribute;
+	}
 	public String toString()
 	{
-		return "{n:"+getName()+" v:"+getValue()+" t:"+getType()+"}";
+		return "{n:"+getName()+" v:"+getValue()+" t:"+getType()+" attribute: "+isAttribute()+"}";
 	}
 }

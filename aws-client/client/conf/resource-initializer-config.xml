@@ -2,7 +2,7 @@
 
 
 	<resource-config id="AWSClientResource"
-		resource-class="com.pmc.aws.client.AWSClientResource" config-file="aws-client-resource-config.xml" />
+		resource-class="com.pmc.aws.client.AWSClientResource" config-file=".aws-client-resource-config.xml" />
 
 
 	<resource-config id="ViewInitializer"

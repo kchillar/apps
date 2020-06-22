@@ -1,0 +1,24 @@
+<view-config>
+
+	<view-class>com.pmc.fw.view.cli.CLIViewImpl</view-class>
+	<event-handler-class>com.pmc.utils.diffdb.DBDiffEventHandler</event-handler-class>
+	<view-config label="Show DB Names" event-id="Show_DB_Names" />
+	<view-config label="Compute Common Tables"
+		event-id="Compute_Common_Tables" />
+	<view-config label="Show Common Tables"
+		event-id="Show_Common_Tables" />
+	<view-config label="Compute Table Data Diff"
+		event-id="Diff_DB_Table">
+		<inputs>
+			<param name="TableIndex" value="0" type="i" />
+		</inputs>
+	</view-config>
+	<view-config label="Set DB Names" event-id="Set_DB_Names">
+		<inputs>
+			<param name="FirstDatabaseName" value="DB1" type="s" />
+			<param name="SecondDatabaseName" value="DB2" type="s" />
+		</inputs>
+	</view-config>
+
+</view-config>
+

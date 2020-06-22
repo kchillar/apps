@@ -1,0 +1,19 @@
+<db-connection-manager-config>
+
+   <db-connection-helper-classname>com.pmc.fw.db.basic.BasicDBConnectionHelper</db-connection-helper-classname>
+
+    <db-connection-helper-config name="DB1">
+     <db-url>jdbc:mysql://127.0.0.1:3306/expdb</db-url>
+     <driver-class>com.mysql.jdbc.Driver</driver-class>
+     <username>appuser1</username>
+     <password>appuser123</password>
+    </db-connection-helper-config>
+    
+    <db-connection-helper-config name="DB2">
+     <db-url>jdbc:mysql://127.0.0.1:3306/expdb2</db-url>
+     <driver-class>com.mysql.jdbc.Driver</driver-class>
+     <username>appuser2</username>
+     <password>appuser123</password>
+    </db-connection-helper-config>
+    
+</db-connection-manager-config>

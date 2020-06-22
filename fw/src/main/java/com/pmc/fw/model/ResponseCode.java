@@ -1,10 +1,11 @@
 package com.pmc.fw.model;
 
-public class ResponseCode 
+public class ResponseCode<T> 
 {
 	private boolean isSuccess = false;
 	private String code;
 	private String msg;
+	private T object;
 	
 	public ResponseCode()
 	{		
@@ -39,6 +40,15 @@ public class ResponseCode
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
+
+	public T getObject() {
+		return object;
+	}
+
+	public void setObject(T object) {
+		this.object = object;
+	}
+	
 	
 	
 }

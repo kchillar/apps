@@ -106,7 +106,10 @@ public class ViewInitializer implements Resource
 					ViewEventHandler childHandler = null;
 					
 					if(childConfig.getEventHandlerClassname() != null)
+					{
 						childHandler = (ViewEventHandler) Class.forName(childConfig.getEventHandlerClassname()).newInstance();
+						log.info("****** using handler "+childConfig.getEventHandlerClassname()+" *********** ");
+					}
 					
 					if(childHandler == null)
 						childHandler = viewHandler;

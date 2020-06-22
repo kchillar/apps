@@ -3,10 +3,42 @@
 	<view-class>com.pmc.fw.view.cli.CLIViewImpl</view-class>
 	<event-handler-class>com.pmc.aws.client.view.LambdaViewEventHandler</event-handler-class>
 	
-	<view-config  label="Show existing Lambda" event-id="List-Lambdas" />
-	<view-config  label="Create new Lambda" event-id="Create-Lambda" />
-	<view-config  label="Execute a Lambda"  event-id="Execute-Lambda" />
+	<view-config label="Show Lambda Functions"
+		event-id="List-Lambdas" />
 
-	
+	<view-config label="Upload Jar for Lambda" event-id="Create-Key-In-S3-Bucket-Multipart">
+		<event-handler-class>com.pmc.aws.client.view.S3ViewEventHandler</event-handler-class>
+			<inputs>
+				<param name="bucketName" value="pmccode" type="s" />
+				<param name="key" value="/srvcs.zip" type="s" />
+				<param name="filePathToUpload" value="/tmp/srvcs.zip" type="s" />			
+			</inputs>
+	</view-config>
+
+	<view-config label="Execute a Lambda Function"
+		event-id="Execute-Lambda">
+		<inputs>
+			<param name="lambdaFunctionName" value="fmtsService" type="s" />
+			<param name="filePathForInputMsg" value="./in/nacha.json" type="s" />
+		</inputs>
+	</view-config>
+
+
+	<view-config label="Create a Lambda Function"
+		event-id="Create-Lambda">
+		<inputs>
+			<param name="runtime" value="java11" type="s" />
+			<param name="roleArnUnderWhichThisLambdaRuns" value="arn:aws:iam::037263000071:role/LambdaTestRole" type="s" />			
+			<param name="S3CodeBucketName" value="pmccode" type="s" />
+			<param name="keyForCodeInS3Bucket" value="/srvcs.zip" type="s" />				
+			<param name="lambdaFunctionName" value="fmtsService" type="s" />
+			<param name="javaPackageClassFunctionName" value="com.pmc.aws.srvcs.lambda.TransformationService::handleRequest" type="s" />
+		</inputs>
+	</view-config>
+
+
+	<view-config label="Delete a Lambda Function"
+		event-id="Delete-Lambda" />
+
 </view-config>
 

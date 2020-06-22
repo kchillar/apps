@@ -8,4 +8,8 @@ public interface View
 {
 	public ResponseCode init(ViewConfig viewConfig, Map<String, ViewConfig> viewConfigMap, Map<String, View> appViewsMap, ViewEventHandler viewEventHandler);
 	public void startInteraction();		
+	
+	public ViewEventHandler getEventHandler();
+	public ViewConfig getViewConfig();
+
 }

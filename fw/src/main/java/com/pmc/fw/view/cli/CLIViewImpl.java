@@ -25,28 +25,18 @@ import com.pmc.fw.view.ViewImpl;
 public class CLIViewImpl extends ViewImpl 
 {
 	public static Logger log = LoggerFactory.getLogger(ViewImpl.class);
-
 	private BufferedReader reader;
 
 	public CLIViewImpl() 
 	{
 		setReader(new BufferedReader(new InputStreamReader(System.in)));
 	}
-
-	/*
-	public ResponseCode init(ViewConfig vInfo, List<ViewConfig> childList, Map<String, View> viewMap, ViewEventHandler handler) 
-	{		
-		ResponseCode code = super.init(vInfo, childList, viewMap, handler);		
-		setReader(new BufferedReader(new InputStreamReader(System.in)));
-		return code;
-	}
-	*/
-
 	
 	public String presentMenuAndGetSelection() 
 	{
 		try 
 		{
+			System.out.println("----------------------------------------------------");			
 			String option = "";
 			while ("".equals(option)) 
 			{				
@@ -87,10 +77,10 @@ public class CLIViewImpl extends ViewImpl
 				if (option.equals(i + "")) 
 				{
 					ViewConfig vc = getChildList().get(i);
+					View ic = getViewMap().get(vc.getId());
 					log.info("option: " + option + " got vi.id: " + vc.getId());
 					if (vc.isNotLeafView()) 
-					{
-						View ic = getViewMap().get(vc.getId());
+					{						
 						ic.startInteraction();
 						break;
 					} 
@@ -106,7 +96,12 @@ public class CLIViewImpl extends ViewImpl
 						}	
 						
 						ViewEvent event = new ViewEventImpl(vc.getId(), vc.getEventId(), this, map);						
-						ResponseCode code = getViewHandler().handleEvent(event);
+						ResponseCode code = null;
+						if(ic.getEventHandler() == null)
+							code = getEventHandler().handleEvent(event);							
+						else
+							code = ic.getEventHandler().handleEvent(event);
+							
 						break;
 					}
 				}

@@ -19,7 +19,7 @@ public abstract class ViewImpl implements View
 
 	private ViewConfig viewConfig;
 	private Map<String, View> viewMap ;	
-	private ViewEventHandler viewHandler;
+	private ViewEventHandler eventHandler;
 
 	public ViewImpl()
 	{		
@@ -30,7 +30,7 @@ public abstract class ViewImpl implements View
 		ResponseCode code = new ResponseCode();
 		this.setViewConfig(viewConfig);
 		this.setViewMap(viewMap);
-		this.viewHandler = viewHandler;
+		this.eventHandler = viewHandler;
 		code.setSuccess(true);
 		return code;
 	}
@@ -51,14 +51,14 @@ public abstract class ViewImpl implements View
 		this.viewMap = viewMap;
 	}
 
-	protected ViewEventHandler getViewHandler()
+	public ViewEventHandler getEventHandler()
 	{
-		return viewHandler;
+		return eventHandler;
 	}
 
-	protected void setViewHandler(ViewEventHandler viewHandler)
+	protected void setEventHandler(ViewEventHandler viewHandler)
 	{
-		this.viewHandler = viewHandler;
+		this.eventHandler = viewHandler;
 	}
 
 	public ViewConfig getViewConfig() {

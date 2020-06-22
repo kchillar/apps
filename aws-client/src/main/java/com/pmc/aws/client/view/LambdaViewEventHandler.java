@@ -3,6 +3,7 @@ package com.pmc.aws.client.view;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pmc.aws.client.helper.LambdaHelper;
 import com.pmc.fw.model.ResponseCode;
 import com.pmc.fw.view.ViewEvent;
 import com.pmc.fw.view.ViewEventHandler;
@@ -14,7 +15,10 @@ public class LambdaViewEventHandler implements ViewEventHandler
 	private static final String ListLambdas = "List-Lambdas";
 	private static final String CreateLambda = "Create-Lambda";
 	private static final String ExecuteLambda = "Execute-Lambda";
+	private static final String DeleteLambda = "Delete-Lambda";
 
+	private LambdaHelper lambdaClient = new LambdaHelper(); 
+	
 	@Override
 	public ResponseCode handleEvent(ViewEvent event) 
 	{
@@ -27,14 +31,17 @@ public class LambdaViewEventHandler implements ViewEventHandler
 		switch(eventId)
 		{
 		case ListLambdas:
-			log.info("List S3 Buckets");			
+			lambdaClient.listFunctions();
 			break;
 		case CreateLambda:
-			log.info("Create S3 bucket");
+			lambdaClient.createLambdaFunction(event.getEventData());
 			break;
 		case ExecuteLambda:
-			log.info("List keys in a S3 bucket");
+			lambdaClient.executeLambdaFunction(event.getEventData());
 			break;
+		case DeleteLambda:
+			lambdaClient.deleteLambdaFunction(event.getEventData());
+			break;			
 		default:
 			log.info("default");
 		}

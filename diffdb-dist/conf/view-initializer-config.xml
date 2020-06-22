@@ -1,0 +1,1 @@
+<view-initializer-config view-config-path="./conf/views" default-view-config-filename="view-config.xml" />
