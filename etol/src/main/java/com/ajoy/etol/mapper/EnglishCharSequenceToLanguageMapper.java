@@ -3,8 +3,7 @@ package com.ajoy.etol.mapper;
 import com.ajoy.etol.config.CharSequenceToCodePointMapping;
 
 public interface EnglishCharSequenceToLanguageMapper 
-{
-	
+{	
 	public boolean isTransliterationMarkedup();
 	public String getMarkupStart();
 	public String getMarkupEnd();
@@ -12,8 +11,7 @@ public interface EnglishCharSequenceToLanguageMapper
 	public int getVisarga();			
 	public CharSequenceToCodePointMapping getVowelSymbol(String asciiCharSequence);
 	public CharSequenceToCodePointMapping getConsonantSymbol(String asciiCharSequence) ;
-	
-	
+		
 	public boolean isAsciiCharUsedForLanguageVowel(int c);
 	public boolean isAsciiCharUsedForLanguageConsonant(int c);
 	public boolean isAsciiCharPassThrough(int c);

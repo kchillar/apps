@@ -1,16 +1,9 @@
-WORKSPACE="/Users/kalyanc/workspace/telugukeyboard"
+source ./run.classpath
 
-REPO=$HOME/.m2/repository
-appName="test"
+echo "CLASSPATH: $CLASSPATH"
 
-echo ""
-
-CLASSPATH="\
-$WORKSPACE/etot/bin:\
-$WORKSPACE/mylogger/bin:\
-"
 
 OPT="-Dswing.aatext=true -Dawt.useSystemAAFontSettings=lcd -Dswing.d"
 
 
-/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/bin/java -cp $CLASSPATH com.cks.etot.app.App $*
+/Users/kalyanc/software/amazon-corretto-11.jdk/Contents/Home/bin/java -cp $CLASSPATH com.ajoy.etol.app.CLIApp $*

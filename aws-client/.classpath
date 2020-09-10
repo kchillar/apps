@@ -56,4 +56,5 @@
   <classpathentry kind="var" path="M2_REPO/com/typesafe/netty/netty-reactive-streams/2.0.4/netty-reactive-streams-2.0.4.jar" sourcepath="M2_REPO/com/typesafe/netty/netty-reactive-streams/2.0.4/netty-reactive-streams-2.0.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/software/amazon/awssdk/lambda/2.13.3/lambda-2.13.3.jar" sourcepath="M2_REPO/software/amazon/awssdk/lambda/2.13.3/lambda-2.13.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/software/amazon/awssdk/aws-json-protocol/2.13.3/aws-json-protocol-2.13.3.jar" sourcepath="M2_REPO/software/amazon/awssdk/aws-json-protocol/2.13.3/aws-json-protocol-2.13.3-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/software/amazon/awssdk/sts/2.13.3/sts-2.13.3.jar" sourcepath="M2_REPO/software/amazon/awssdk/sts/2.13.3/sts-2.13.3-sources.jar"/>
 </classpath>

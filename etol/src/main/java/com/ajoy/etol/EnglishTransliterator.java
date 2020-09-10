@@ -15,53 +15,62 @@ import org.apache.logging.log4j.Logger;
 
 import com.ajoy.etol.config.CharSequenceToCodePointMapping;
 import com.ajoy.etol.config.Settings;
+import com.ajoy.etol.mapper.DefaultCharSequenceMapper;
 import com.ajoy.etol.mapper.EnglishCharSequenceToLanguageMapper;
 
 
 /**
  * @author: Kalyan Chillara<br>
  * 
- * This class reads ascii character by character from the input and buffers them. The buffers are processed <br>
- * and when the sequence matches a phonetic, outputs the language character matching the sequence and <br> 
- * clears the buffer<br>
+ * This class reads ascii character by character from the input and buffers them.<br>
+ * When the character sequence in the buffer matches a configured sequence, corresponding language character is written to the output stream and the 
+ * buffer is cleared.<br> 
  * 
  * The phonetic sequences and the language characters to be output are configured in XML configuration file.<br>
- * The only constraint to be followed in XML configuration file is that ascii characters used for vowels should not be used for consonants and vice-versa.<br>
+ * The main constraint to be followed in XML configuration file is that same ascii character  cannot be mapped to both vowel and consonant 
+ * in the target language.<br>
  * 
- * Logic flow is :<br>
- * 0) process each char from the input:<br> 
- * 1) if char is vowel, store in vowel buffer<br>
- * 2) if char is consonant, store in consonant buffer<br>
- * 3) if char is other:<br> 
+ * Logic flow is:<br>
+ * 0) While input is available:
+ * 0) read a char from the input. If the asci char encountered:<br> 
+ * 1) is language vowel, store the asci char in a vowel buffer<br>
+ * 2) is language consonant, store the asci char in a consonant buffer<br>
+ * 3) is neither of the above:<br> 
  *    a) if char is markup, store in markup buffer<br>
- *    b) otherwise write the char to output as there is no processing<br>
+ *    b) otherwise write the char to output as is<br>
  *    
- * The vowel buffer is processed:<br>
- * a) if the buffer reaches the limit<br>
- * b) if char encountered is consonant or other char<br>
+ * The vowel buffer is processed if:<br>
+ * a) the buffer reaches the limit<br>
+ * b) the asci char encountered is used for language consonant or other char<br>
  * 
- * The consonant buffer is processed:<br>
- * a) if the buffer reaches the limit<br>
- * b) if char encountered is vowel or other char<br>
+ * The consonant buffer is processed if:<br>
+ * a) the buffer reaches the limit<br>
+ * b)  the asci char encountered is vowel or other char<br>
  * 
- * Both vowel buffer and consonant buffers are processed if char encountered is other.<br>
+ * Both the vowel buffer and the consonant buffers are processed if char encountered is other.<br>
  * a) if the last char before other char, is vowel, consonant buffer is processed and then vowel buffer<br>
  * b) if the last char before other char, is consonant, vowel buffer is processed and then consonant buffer<br> 
  * 
- * A flag, shouldTransliterate is set/unset based conditions like, initial config, encountering of chars which <br>
- * represent markup start and markup end pattern<br> 
-*
+ * A flag, shouldTransliterate is set/unset based conditions encountered like, initial configuration, encountering of chars which <br>
+ * represent start of markup and end of markup.<br> 
+ * 
+ * Finally instances of this class are not thread safe and external sychronization is needed if instance of this class is shared between multiple threads.<br>
+ *
  */
 public class EnglishTransliterator
 {
 	private static Logger log = LogManager.getLogger(EnglishTransliterator.class);
-		
+	private static final char NullChar = '\0';	
 	private static final int BufferSize = 10;		
+	
 
 	/** char mapper used to map ascii sequence to language codepoints */
 	private EnglishCharSequenceToLanguageMapper mapper;
 	private Reader from;	
 	private Writer to;
+	private StringBuilder outBuffer;
+	private boolean streamMode = false;
+
 
 	/** state variables */
 	private boolean shouldTransliterate = false;
@@ -84,19 +93,39 @@ public class EnglishTransliterator
 	private BufferedWriter phoneticLog;
 	private BufferedWriter codePointLog;
 
-
-	public EnglishTransliterator(Reader input, Writer output, EnglishCharSequenceToLanguageMapper mapper)	
+	public EnglishTransliterator()	
 	{		
-		this.from = input;
-		this.to = output;
+		this.mapper = new DefaultCharSequenceMapper();
+
+		if(mapper.isTransliterationMarkedup())				
+			shouldTransliterate = false;		
+		else			
+			shouldTransliterate = true;		
+		
+		try
+		{
+			createLogFiles();
+		}
+		catch(Exception exp)
+		{
+			log.error("Exp need to fix this",exp); 
+		}
+	}
+
+	
+	public EnglishTransliterator(EnglishCharSequenceToLanguageMapper mapper) throws IOException
+	{		
 		this.mapper = mapper;
 
 		if(mapper.isTransliterationMarkedup())				
 			shouldTransliterate = false;		
 		else			
 			shouldTransliterate = true;		
+		
+		createLogFiles();
 	}
 
+	
 	private void createLogFiles() throws IOException
 	{
 		if(Settings.GeneratePhoneticData)
@@ -119,11 +148,27 @@ public class EnglishTransliterator
 			codePointLog.close();
 		}
 	}
+		
+	public String transliterateString(String input) throws IOException 
+	{				
+		if(input == null)
+			return input;			
+		outBuffer = new StringBuilder();			
+		for(char c: input.toCharArray())					
+			processAsciChar(c);						
+		processAsciChar(NullChar);
+		String out = outBuffer.toString();		
+		return out;
+	}
 
-	
-	public void start() throws IOException 
+
+	public void transliterateStream(Reader input, Writer output) throws IOException 
 	{								
+		this.from = input;
+		this.to = output;
+		streamMode = true;
 		createLogFiles();
+		
 		long startTime = System.currentTimeMillis();
 		try
 		{
@@ -168,7 +213,7 @@ public class EnglishTransliterator
 			if(isAsciiCharUsedInMarkup(lastChar))
 				processMarkupLike(lastChar);
 
-			if(log.isDebugEnabled())
+			if(Settings.EnableLogs)
 				log.debug("A-processAsciChar('"+currChar+"')");			
 			if(halluIndx>0)
 				processHalluBuffer();
@@ -183,7 +228,7 @@ public class EnglishTransliterator
 			if(isAsciiCharUsedInMarkup(lastChar))
 				processMarkupLike(lastChar);
 
-			if(log.isDebugEnabled())
+			if(Settings.EnableLogs)
 				log.debug("H-processAsciChar('"+currChar+"')");
 			if(achuIndx>0)
 				processAchuBuffer();
@@ -211,7 +256,7 @@ public class EnglishTransliterator
 
 			if(isAsciiCharUsedInMarkup(currChar))
 			{
-				if(log.isDebugEnabled())
+				if(Settings.EnableLogs)
 					log.debug("M-processAsciChar('"+currChar+"')");
 
 				markup[markupIndx++] = currChar;
@@ -257,7 +302,7 @@ public class EnglishTransliterator
 					processMarkupLike(lastChar);
 
 
-				if(log.isDebugEnabled())
+				if(Settings.EnableLogs)
 					log.debug("O-processAsciChar('"+currChar+"')");
 				processOther(currChar);
 				lastChar = 0;
@@ -265,34 +310,52 @@ public class EnglishTransliterator
 		}
 	}
 
+	private final void outputChar(char aChar) throws IOException
+	{
+		if(!streamMode)
+			outBuffer.append(aChar);
+		else	
+			to.write(aChar);
+		
+		if(Settings.GeneratePhoneticData)
+		{
+			phoneticLog.write(aChar);
+			if(!streamMode)
+				phoneticLog.flush();	
+		}
+		
+		if(Settings.GenerateCodePointsData)
+		{
+			codePointLog.write(aChar);
+			if(!streamMode)
+				codePointLog.flush();
+		}
+	}
+	
 	private final void processMarkupLike(char aChar) throws IOException
 	{
-		to.write(aChar);
-		if(Settings.GeneratePhoneticData)
-			phoneticLog.write(aChar);
-		if(Settings.GenerateCodePointsData)
-			codePointLog.write(aChar);
+		outputChar(aChar);
 	}
 
 
 	private final void processOther(char currChar) throws IOException
 	{
-		if(Settings.GeneratePhoneticData)
-			phoneticLog.write(currChar);
-		if(Settings.GenerateCodePointsData)
-			codePointLog.write(currChar);
-
 		if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Consonant)
-			to.write(mapper.getVisarga());
-
-		to.write(currChar); 
+		{
+			outputChar((char)mapper.getVisarga());			
+		}
+		
+		if(currChar != NullChar)
+			outputChar(currChar);
 		lastOutputtedKeyType = CharSequenceToCodePointMapping.Other;
 	}
 
 
 	private void processAchuBuffer() throws IOException
 	{
-		log.debug("processAchuBuffer("+achuIndx+")");
+		if(Settings.EnableLogs)
+			log.debug("processAchuBuffer("+achuIndx+")");
+		
 		keyIndx = 0;
 		for(int i=0; i<achuIndx; i++)
 		{
@@ -318,7 +381,9 @@ public class EnglishTransliterator
 
 	private void processHalluBuffer() throws IOException
 	{
-		log.debug("processHalluBuffer("+halluIndx+")");
+		if(Settings.EnableLogs)
+			log.debug("processHalluBuffer("+halluIndx+")");
+		
 		keyIndx = 0;
 		for(int i=0; i<halluIndx; i++)
 		{
@@ -346,7 +411,7 @@ public class EnglishTransliterator
 
 	private void outputHallus() throws IOException
 	{
-		if(log.isDebugEnabled())
+		if(Settings.EnableLogs)
 			showKeys("outputHallus("+keyIndx+")");
 
 		for(int i=0;i<keyIndx; i++)
@@ -357,27 +422,25 @@ public class EnglishTransliterator
 			CharSequenceToCodePointMapping ls = null;
 
 			if(i>0)				
-				to.write(mapper.getVisarga());				
+				outputChar((char)mapper.getVisarga());
 
 			ls = mapper.getConsonantSymbol(keys[i]);
 
 			if(ls != null)
 			{
 				for(int cp: ls.getCodepoints())
-					to.write(cp);
+					outputChar((char)cp);
 
 				if(Settings.GenerateCodePointsData)				
 					codePointLog.write(ls.getHexCodepoint()+"|");				
 			}			
 			lastOutputtedKeyType = CharSequenceToCodePointMapping.Consonant;
-		}		
-
-		to.flush();
+		}				
 	}
 
 	private void outputAchus() throws IOException
 	{
-		if(log.isDebugEnabled())
+		if(Settings.EnableLogs)
 			showKeys("outputAchus("+keyIndx+")");
 
 		for(int i=0;i<keyIndx; i++)
@@ -401,23 +464,23 @@ public class EnglishTransliterator
 			if(ls != null)
 			{
 				for(int cp: ls.getCodepoints())
-					to.write(cp);
+					outputChar((char)cp);
 
 				if(Settings.GenerateCodePointsData)
 					codePointLog.write(ls.getHexCodepoint()+"|");				
 			}
 			lastOutputtedKeyType = CharSequenceToCodePointMapping.Vowel;
 		}	
-
-		to.flush();
 	}
 
 	private void showKeys(String msg)
 	{
 		StringBuilder buff = new StringBuilder();
 		for(int i=0;i<keyIndx; i++)
-			buff.append(keys[i]+"|");							
-		log.debug(msg+" => "+buff.toString());
+			buff.append(keys[i]+"|");		
+		
+		if(Settings.EnableLogs)
+			log.debug(msg+" => "+buff.toString());
 	}
 
 	private boolean isAsciiCharPartOfHallulu(int c)

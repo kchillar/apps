@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -24,16 +25,29 @@ import com.ajoy.etol.EnglishTransliterator;
 import com.ajoy.etol.LanguageTransliterator;
 import com.ajoy.etol.mapper.DefaultCharSequenceMapper;
 
-public class App 
+/**
+ * 
+ * @author kalyanc
+ *
+ */
+public class CLIApp 
 {
-	private static Logger log = LogManager.getLogger(App.class);
+	private static Logger log = LogManager.getLogger(CLIApp.class);
 	
 	public static void main(String[] args) throws Exception
 	{
-		if(args.length == 1)
+		String outputFile = "e2l-out.html";
+		
+		if(args.length == 0)
 		{
-			log.info("Transliterationg from System.in");
-			processEtoLFiles(args[0]);
+			System.out.println("Will transliterate from System.in and output to : "+outputFile);
+			interativeTransliteration(outputFile);
+		}		
+		else if(args.length == 1)
+		{
+			outputFile = args[0];
+			System.out.println("Will transliterationg from System.in and output to : "+outputFile);
+			interativeTransliteration(outputFile);
 		}
 		else if(args.length == 3)
 		{
@@ -54,45 +68,34 @@ public class App
 		}
 	}
 	
-	
-	public static void processEtoLFiles(String outputFile) throws IOException
-	{						
-		PipedInputStream textIn  =  new PipedInputStream();
-		PipedOutputStream textOut  = new PipedOutputStream(textIn);
-		Reader inputReader = new InputStreamReader(textIn);									
-		Writer fileWriter = new OutputStreamWriter(new FileOutputStream(new File(outputFile)));
-		
-		Thread translationThread = new Thread(new TranslationWorker(inputReader, fileWriter));
-		translationThread.start();
-
-		log.info("Will read from standinput and output to writer");
-		 BufferedReader br  = new BufferedReader(new InputStreamReader(System.in)); 
-
-		 String line;
-		 
-		 while(true)
-		 {
-			 System.out.print("");
-			 line = br.readLine();
-			 			 			 
-			 textOut.write(line.getBytes());			 
-			 textOut.write('\n');
-			 
-		 }
-		 
-		 
+	public static void interativeTransliteration(String outputFile) throws IOException
+	{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter pr = new PrintWriter(new File(outputFile));
+		DefaultCharSequenceMapper mapper = new DefaultCharSequenceMapper();
+		mapper.setTransliterationMarkedup(false);
+		EnglishTransliterator et = new EnglishTransliterator(mapper);
+		while(true)
+		{
+			System.out.print("e2l> ");
+			String line = br.readLine();
+			String out = et.transliterateString(line);
+			pr.println(out);
+			System.out.println(out);
+			pr.flush();
+		}
 	}
-
+		
 	public static void processEtoLFiles(String inputFile, String outputFile) throws IOException
 	{
 		System.out.println("Starting E2L Processing from input: "+inputFile+" and will output to : "+outputFile);
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));
 		BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputFile))));
 		
-		DefaultCharSequenceMapper mapper = new DefaultCharSequenceMapper();
+		//DefaultCharSequenceMapper mapper = new DefaultCharSequenceMapper();
 		
-		EnglishTransliterator lst = new EnglishTransliterator(br, wr, mapper );						
-		lst.start();				
+		EnglishTransliterator lst = new EnglishTransliterator();						
+		lst.transliterateStream(br, wr);				
 		wr.close();
 		br.close();
 	}

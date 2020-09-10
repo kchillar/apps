@@ -1,0 +1,20 @@
+#######################################################################
+# AUTO GENERATED FILE USING ./cpgen.sh Timestamp: 2020-04-30-14:57:25 #
+#######################################################################
+
+M2_REPO=$HOME/.m2/repository
+CLASSPATH="./:\
+../target/classes:\
+$M2_REPO/org/apache/logging/log4j/log4j-slf4j-impl/2.11.2/log4j-slf4j-impl-2.11.2.jar:\
+$M2_REPO/org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar:\
+$M2_REPO/org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar:\
+$M2_REPO/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:\
+$M2_REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:\
+$M2_REPO/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:\
+$M2_REPO/org/glassfish/jaxb/jaxb-runtime/2.3.2/jaxb-runtime-2.3.2.jar:\
+$M2_REPO/jakarta/xml/bind/jakarta.xml.bind-api/2.3.2/jakarta.xml.bind-api-2.3.2.jar:\
+$M2_REPO/com/sun/xml/fastinfoset/FastInfoset/1.2.16/FastInfoset-1.2.16.jar:\
+$M2_REPO/jakarta/activation/jakarta.activation-api/1.2.1/jakarta.activation-api-1.2.1.jar:\
+$M2_REPO/com/sun/istack/istack-commons-runtime/3.0.8/istack-commons-runtime-3.0.8.jar:\
+$M2_REPO/com/sun/xml/fastinfoset/FastInfoset/1.2.16/FastInfoset-1.2.16.jar:\
+"

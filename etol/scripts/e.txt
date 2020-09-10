@@ -1,34 +1,20 @@
+<html>
+<body>
 
-0) SrIM OM SiWAy gurWE n mH
+<p>This is demonstration of transliteration</p>
+<%  00) SreeM OM Sivaaya guravE namH %> </br>
+<%  01) SrIM OM SiWAya guravE namH %> </br>
+<%  02) kALi, lalitha paramEswari, rajarajEswari %> </br>
+<%  03) jZAnamu %> </br>
+<%  04) jAnhavi jaanhavi %> </br>
+<%  05) shyAMbhavi %> </br>
+<%  06) SyAMbhavi %> </br>
+<%  07) SrIrAmM SrIni WAs %> </br>
+<%  08) kshIra saagara madhanaMbu %> </br>
+<%  09) Sree mAthA %> </br>
+<%  10) Sree mahArAgni %> </br>
+<%  11) Sree mathSiMhAsanEsvari %> </br>
 
-28) kALi
-27) Polmu Fhlmu Fhlmu Fhlmu Fhlmu Plmu
-0) jZAnmu
-0)jAnhWi
-0) shAymu
-1) SrIrAmM SrIni WAs
-2) kShIr sAgr mdhnmu 
-3) brhmWidhudu
-4) kRShNudu
-5) Kdgmu
-6) hAniWRdhDhi
-7) ithihAsmu
-8) Th
-9) akRRrudu
-10) mUlPrkRti
-11) RShi
-12)kRShi
-13)RRP
-14) AkAsm
-16) mP 
-17) SrIrAmM
-18) OM
-19) brhm
-20) brAhmI sthiti
-21) WiShNuM
-22) kShEthrmu kShEthrjZudu
-23) jnAnmu
-24) 1) Bkthi |  rkthi, @  mukthi, ! , att
-25) kaurWulu
-26) bAWuMhdh
 
+</body>
+</html>
