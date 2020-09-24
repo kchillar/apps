@@ -1,47 +1,44 @@
 package com.ajoy.etol.mapper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.etol.config.CharSequenceToCodePointMapping;import com.ajoy.etol.config.Settings;
+import com.ajoy.etol.config.CharSequenceToCodePointMapping;
+import com.ajoy.etol.config.Settings;
 import com.ajoy.etol.config.TransliteratorConfig;
 
 /**
  * 
- * @author kalyanc
+ * @author Kalyana Chillara<br>
  *
  */
-public class DefaultCharSequenceMapper implements EnglishCharSequenceToLanguageMapper, LanguageToEnglishCharSequenceMapper
+public class TransliterationMapperImpl implements TransliterationMapper
 {		
-	private static Logger log = LogManager.getLogger(DefaultCharSequenceMapper.class);
+	private static Logger log = LogManager.getLogger(TransliterationMapperImpl.class);
 
 	private TransliteratorConfig config; 
 
 	/** All these are populated from the config */
 	private CharSequenceToCodePointMapping[] symbolList ;	
-	private int visarga;
-	private CharSequenceToCodePointMapping visargaSymbol;
-
-	private Map<String, CharSequenceToCodePointMapping> codepointMap = new HashMap<String, CharSequenceToCodePointMapping>();
-
+	private int modifier;
+	private CharSequenceToCodePointMapping modifierSymbol;
+	
 	private Map<String, CharSequenceToCodePointMapping> consonantMap = new HashMap<String, CharSequenceToCodePointMapping>();
 	private Map<String, CharSequenceToCodePointMapping> vowelMap = new HashMap<String, CharSequenceToCodePointMapping>();
 	private Map<String, CharSequenceToCodePointMapping> commentMap = new HashMap<String, CharSequenceToCodePointMapping>();
-
-
+	private Map<String, CharSequenceToCodePointMapping> codepointMap = new HashMap<String, CharSequenceToCodePointMapping>();
 	private boolean[] listOfAsciiCharUsedForComments = new boolean[128];
 	private boolean[] listOfAsciiCharUsedForLanguageVowel = new boolean[128];
 	private boolean[] listOfAsciiCharUsedForLanguageConsonant = new boolean[128];
 
-	public DefaultCharSequenceMapper()
+	public TransliterationMapperImpl(TransliteratorConfig aConfig)
 	{				
+		
+		config = aConfig;
+		
 		for(int i=0 ; listOfAsciiCharUsedForLanguageConsonant.length < 128; i++)
 			listOfAsciiCharUsedForLanguageConsonant[i] = false;
 
@@ -67,52 +64,22 @@ public class DefaultCharSequenceMapper implements EnglishCharSequenceToLanguageM
 	{
 		try
 		{
-			//			InputStream in = DefaultCharSequenceMapper.class.getResourceAsStream("/telugu-language-symbols.xml");
+			modifier = Integer.parseInt(config.getModifier(), 16);	
+			modifierSymbol = new CharSequenceToCodePointMapping(); 
+			modifierSymbol.setCodepoint(modifier);
+			modifierSymbol.setHexCodepoint(config.getModifier());
 
-			//InputStream in = DefaultCharSequenceMapper.class.getResourceAsStream("/telugu-language-symbols.xml");
-			File file = new File("/Users/kalyanc/CodeRepos/apps/etol/conf/english-to-telugu-transliterator-config.xml");
-			if(Settings.EnableLogs)
-				log.info("Using file: "+file.getPath());
-			InputStream in =  new FileInputStream(file);
-			config = TransliteratorConfig.getFromStream(in);			
-			visarga = Integer.parseInt(config.getVisarga(), 16);	
-			visargaSymbol = new CharSequenceToCodePointMapping();
-			int val[] = new int[1];
-			val[0] = visarga;
-			visargaSymbol.setCodepoints(val);
-			visargaSymbol.setHexCodepoint(config.getVisarga());
-
-			codepointMap.put(visarga+"", visargaSymbol);
+			codepointMap.put(modifier+"", modifierSymbol);
 
 			symbolList = new CharSequenceToCodePointMapping[config.getSymbolsList().size()];						
 			int i = 0;			
 			for(CharSequenceToCodePointMapping sy: config.getSymbolsList())
 			{	
-				String [] cps = sy.getHexCodepoint().split(",");
+				sy.setCodepoint( Integer.parseInt(sy.getHexCodepoint(),16) );
 
-				if(Settings.EnableLogs)
-					log.debug("cps[" + cps.length + "] = " + cps);
-
-				int[] cpInts = new int[cps.length];
-				for (int j = 0; j < cps.length; j++) 
-					cpInts[j] = Integer.parseInt(cps[j], 16);
-
-				sy.setCodepoints(cpInts);
-
-				if(Settings.EnableLogs)
-				{
-					if(log.isDebugEnabled())
-					{
-						StringBuilder buff = new StringBuilder();
-						buff.append(sy.getAsciiCharSequence() + " = ");
-						for (int j = 0; j < cpInts.length; j++)
-							buff.append(cpInts[j] + ",");
-						buff.append("\n");
-					}
-				}
-
-				if(sy.getCodepoints().length == 1)
-					codepointMap.put(sy.getCodepoints()[0]+"", sy);
+				//prefer to take first mapping defined for reverse conversions
+				if(codepointMap.get(sy.getCodepoint()+"") == null)
+					codepointMap.put(sy.getCodepoint()+"", sy);
 
 				if(sy.getAsciiCharSequence() == null)
 				{
@@ -122,18 +89,18 @@ public class DefaultCharSequenceMapper implements EnglishCharSequenceToLanguageM
 				}
 
 				if(Settings.EnableLogs)
-					log.info(" Type: "+sy.getType()+" DEC: "+sy.getCodepoints()[0]+" HEX: "+sy.getHexCodepoint()+" Seq: "+sy.getAsciiCharSequence());
+					log.info(" Type: "+sy.getType()+" DEC: "+sy.getCodepoint()+" HEX: "+sy.getHexCodepoint()+" Seq: "+sy.getAsciiCharSequence());
 
 				symbolList[i] = sy;												
-				if(sy.getType() == CharSequenceToCodePointMapping.Consonant)
+				if(sy.getType() == CharSequenceToCodePointMapping.Hallu)
 				{					
 					consonantMap.put(sy.getAsciiCharSequence(), sy);
 				}
-				else if(sy.getType() == CharSequenceToCodePointMapping.Vowel)
+				else if(sy.getType() == CharSequenceToCodePointMapping.Acchu)
 				{
 					vowelMap.put(sy.getAsciiCharSequence(), sy);
 				}
-				else if(sy.getType() == CharSequenceToCodePointMapping.ConsonantModification)
+				else if(sy.getType() == CharSequenceToCodePointMapping.Gunintam)
 				{
 					consonantMap.put(sy.getAsciiCharSequence(), sy);
 				}
@@ -148,8 +115,6 @@ public class DefaultCharSequenceMapper implements EnglishCharSequenceToLanguageM
 
 				i++;
 			}
-
-			TransliteratorConfig.writeToStream(new FileOutputStream(new File("./symbols.xml")), config);
 		}
 		catch(Exception exp)
 		{
@@ -243,14 +208,14 @@ public class DefaultCharSequenceMapper implements EnglishCharSequenceToLanguageM
 	}
 
 
-	public int getVisarga()
+	public int getModifierCodepoint()
 	{
-		return visarga;
+		return modifier;
 	}
 
-	public CharSequenceToCodePointMapping getVisargaSymbol()
+	public CharSequenceToCodePointMapping getModifierSymbol()
 	{
-		return visargaSymbol;
+		return modifierSymbol;
 	}
 
 

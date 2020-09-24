@@ -1,14 +1,8 @@
 package com.ajoy.etol.config;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -31,8 +25,8 @@ public class TransliteratorConfig
 	@XmlAttribute(name="language")
 	private String language;
 	
-	@XmlAttribute(name="visarga")
-	private String visarga;	
+	@XmlAttribute(name="modifier")
+	private String modifier;	
 
 	@XmlElementWrapper(name="vowel-sound-chars")
 	@XmlElement(name="char")
@@ -46,14 +40,14 @@ public class TransliteratorConfig
 	@XmlElement(name="char-sequence-mapping")
 	private ArrayList<CharSequenceToCodePointMapping> symbolsList;
 				
-	public String getVisarga() 
+	public String getModifier() 
 	{
-		return visarga;
+		return modifier;
 	}
 	
-	public void setVisarga(String visarga) 
+	public void setModifier(String modifier) 
 	{
-		this.visarga = visarga;
+		this.modifier = modifier;
 	}
 	
 	public List<String> getVowelCharList() {
@@ -119,28 +113,10 @@ public class TransliteratorConfig
 	}
 
 
-
-	public static TransliteratorConfig getFromStream(InputStream in)
-			throws JAXBException {
-
-		JAXBContext jaxbContext = JAXBContext.newInstance(TransliteratorConfig.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		TransliteratorConfig info = (TransliteratorConfig) jaxbUnmarshaller.unmarshal(in);
-		return info;
-	}
-
-	public static void writeToStream(OutputStream out, TransliteratorConfig info)
-			throws JAXBException {			
-		JAXBContext jaxbContext = JAXBContext.newInstance(TransliteratorConfig.class);
-		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-		jaxbMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-		jaxbMarshaller.marshal(info, out);			
-	}
-
 	public String toString()
 	{
 		StringBuilder buff = new StringBuilder();		
-		buff.append("{ language: "+language+", visarga: "+visarga+", symbolList:[");		
+		buff.append("{ language: "+language+", modifier: "+modifier+", symbolList:[");		
 		if(getSymbolsList()!= null)
 		{
 			for(CharSequenceToCodePointMapping sy: getSymbolsList())			

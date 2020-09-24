@@ -1,6 +1,9 @@
 package com.ajoy.etol.app;
 
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,13 +14,19 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger; 
+import org.apache.logging.log4j.Logger;
+
+import com.ajoy.etol.Transliterator;
+import com.ajoy.etol.mapper.CharSequenceMapperProvider; 
 
 /**
  * 
@@ -26,28 +35,53 @@ import org.apache.logging.log4j.Logger;
  */
 public class UIApp extends JFrame implements ActionListener 
 {  	
-	private static Logger log = LogManager.getLogger(UIApp.class);
-	private TextPanel textPanel;
+	private static Logger log = LogManager.getLogger(UIApp.class);	
+	private UIActionHandler handler;
 	private File lastFileDialogDir = new File(System.getProperty("user.dir"));
+	private String currentLanguage = Transliterator.LANGUAGE_TELUGU;
+	private Transliterator transliterator;	
+	private JScrollPane pane;
+	private JTextArea textArea;
+	private JTextField textField = new JTextField();
+	private UndoHandler undoHandler = new UndoHandler();
+	private File currentFile;
 	 
 	public UIApp() 
 	{ 
 		super("E2L - Editor"); 
 		
 		try 
-		{ 
+		{
+			textArea = new JTextArea();
+			transliterator = Transliterator.getInstance(currentLanguage);
+			handler = new UIActionHandler(this, textArea, textField, transliterator);			
+			textArea.setText("Welcome to E2L - Editor");
+			undoHandler.setupUndoFunctionality(textArea);
+			pane = new JScrollPane(textArea);
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel"); 		
 			MetalLookAndFeel.setCurrentTheme(new OceanTheme()); 
+			Dimension dim =  new Dimension(650, 150);
+			JMenuBar mb = setupMenuBar();						
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			this.setLayout(new BorderLayout());
+			this.add(mb, BorderLayout.NORTH);
+			this.add(pane, BorderLayout.CENTER);
+			this.add(textField, BorderLayout.SOUTH);
+			this.setSize(500, 500); 		
+			this.setLocation(dim.width/2-this.getPreferredSize().width/2, dim.height/2-this.getPreferredSize().height/2);
+			this.setVisible(true); 			
 		} 
 		catch (Exception e) 
 		{ 
+			log.error("Error",e);
 		} 
-				
-		JMenuBar mb = setupMenuBar();
-		this.setJMenuBar(mb); 
-		this.setSize(500, 500); 
-		this.show(); 
 	} 
+	
+	public Transliterator getTransliterator()
+	{
+		return transliterator;
+	}
+	
 	
 	private JMenuBar setupMenuBar()
 	{
@@ -105,37 +139,61 @@ public class UIApp extends JFrame implements ActionListener
 
 		if (s.equals("Open")) 
 		{ 
-			JFileChooser j = new JFileChooser(lastFileDialogDir); 
-			int r = j.showOpenDialog(null); 
-			if (r == JFileChooser.APPROVE_OPTION) 
-			{												
-				File file = new File(j.getSelectedFile().getAbsolutePath());				
-				if(file.isFile() && file.exists())
-				{
-					lastFileDialogDir = file.getParentFile();				
-					if(textPanel != null)					
-						this.remove(textPanel);					
-					this.add((textPanel = new TextPanel(this, file)));
-				}
-			}  
-			else
-				JOptionPane.showMessageDialog(this, "Cancelled open"); 
+			File file = fileDialogue(true);				
+			if(file !=null && file.isFile() && file.exists())
+			{
+				lastFileDialogDir = file.getParentFile();				
+				if(handler.handleFileOpen(file))
+					currentFile = file;
+			}
 		} 
 		else if (s.equals("Save")) 
 		{ 
-			if(textPanel != null)
-				textPanel.saveToFile();
-		} 
+			if(currentFile!=null)
+				handler.handleSaveFile(currentFile);
+		}
+		else if (s.equals("New")) 
+		{
+			File file = fileDialogue(false);
+			if(!file.exists())
+			{
+				lastFileDialogDir = file.getParentFile();
+				currentFile = file;
+				handler.handleSaveFile(file);				
+			}			
+		} 		
 		else  
 		{ 
-			if(textPanel != null)
-				textPanel.handleMenuEvent(s);
+			if(handler != null)
+				handler.handleMenuEvent(s);
 		} 
 	} 
-
+	
+	private File fileDialogue(boolean forExistingFile)
+	{
+		File file = null;
+		JFileChooser j = new JFileChooser(lastFileDialogDir);		
+		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int r = -1;		
+		if(forExistingFile)
+			r = j.showOpenDialog(this);
+		else
+			r = j.showDialog(this, "New");
+		
+		if (r == JFileChooser.APPROVE_OPTION) 														
+			file = new File(j.getSelectedFile().getAbsolutePath());												
+		else
+			JOptionPane.showMessageDialog(this, "FileName Cancelled!!!"); 
+		return file;
+	}
+	
 	public static void main(String args[]) 
 	{ 
+		
+		CharSequenceMapperProvider.init();
 		E2LUtil.init();
 		UIApp e = new UIApp(); 
 	} 
+	
+
 } 

@@ -7,41 +7,51 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="char-sequence-mapping")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class CharSequenceToCodePointMapping 
 {
-	public static final int  Visarga = 0;
-	public static final int  Consonant = 1;
-	public static final int  Vowel = 2;
-	public static final int  ConsonantModification = 3;
+	//Consonant modifier
+	public static final int  Modifier = 0;
+	public static final int  Hallu = 1;
+	public static final int  Acchu = 2;
+	public static final int  Gunintam = 3;
 	public static final int  CommentChar = 4;
 	public static final int  Other = 5;
 	
-	//
+	@XmlAttribute(name="hex-codepoint")
 	private String hexCodepoint;
+	@XmlAttribute(name="ascii-char-sequence")
 	private String asciiCharSequence;
-	private int type;	
-	private int[] codepoints;
+	@XmlAttribute(name="type")
+	private int type;		
+	@XmlAttribute(name="anunasika-or-visarga")
+	private boolean anunasiakOrVisarga;
+	
+	//This is set and does not come from XML
+	private int codepoint;
 	
 	public String getHexCodepoint()
 	{
 		return hexCodepoint;
 	}
 	
-	public int[] getCodepoints()
+	public int getCodepoint()
 	{
-		return codepoints;
+		return codepoint;
 	}
 	
-	public void setCodepoints(int[] codepoints)
+	public void setCodepoint(int codepoint)
 	{
-		this.codepoints = codepoints;
+		this.codepoint = codepoint;
 	}
 	
-	@XmlAttribute(name="hex-codepoint")
+	
 	public void setHexCodepoint(String hexString) 
 	{
 		this.hexCodepoint = hexString;
@@ -50,7 +60,7 @@ public class CharSequenceToCodePointMapping
 		return asciiCharSequence;
 	}
 	
-	@XmlAttribute(name="ascii-char-sequence")
+	
 	public void setAsciiCharSequence(String asciiCharSequence) {
 		this.asciiCharSequence = asciiCharSequence;
 	}
@@ -59,12 +69,19 @@ public class CharSequenceToCodePointMapping
 		return type;
 	}
 	
-	@XmlAttribute(name="type")
+
 	public void setType(int type) 
 	{
 		this.type = type;
 	}
 	
+	public boolean isAnunasiakOrVisarga() {
+		return anunasiakOrVisarga;
+	}
+
+	public void setAnunasiakOrVisarga(boolean anunasiakOrVisarga) {
+		this.anunasiakOrVisarga = anunasiakOrVisarga;
+	}
 
 	public static CharSequenceToCodePointMapping getFromStream(InputStream in)
 			throws JAXBException 

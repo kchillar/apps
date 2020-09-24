@@ -1,21 +1,20 @@
-<transliterator-config modifier="0C4D"
-	is-transliteration-markedup="true">
+<transliterator-config modifier="0C4D" is-transliteration-markedup="true">
 
 	<markup-start>&lt;%</markup-start>
 	<markup-end>%&gt;</markup-end>
 
 	<vowel-sound-chars>
 		<char>a</char>
+		<char>A</char>		
 		<char>e</char>
+		<char>E</char>		
 		<char>i</char>
+		<char>I</char>		
 		<char>o</char>
-		<char>u</char>
-		<char>A</char>
-		<char>E</char>
-		<char>H</char>
-		<char>I</char>
-		<char>M</char>
-		<char>O</char>
+		<char>O</char>		
+		<char>u</char>				
+		<char>H</char>		
+		<char>M</char>		
 		<char>R</char>
 		<char>U</char>
 	</vowel-sound-chars>
@@ -30,6 +29,7 @@
 		<char>f</char>
 		<char>F</char>
 		<char>g</char>
+		<char>G</char>		
 		<char>h</char>
 		<char>j</char>
 		<char>J</char>
@@ -60,20 +60,23 @@
 	</consonant-sound-chars>
 
 	<char-sequence-mappings>
-		<char-sequence-mapping ascii-char-sequence="K"
-			hex-codepoint="0C15" type="1" />
+	
+		<char-sequence-mapping ascii-char-sequence="k"
+			hex-codepoint="0C15" type="1" />	
 		<char-sequence-mapping ascii-char-sequence="c"
-			hex-codepoint="0C15" type="1" />
-		<char-sequence-mapping ascii-char-sequence="C"
 			hex-codepoint="0C15" type="1" />
 		<char-sequence-mapping ascii-char-sequence="q"
 			hex-codepoint="0C15" type="1" />
-		<char-sequence-mapping ascii-char-sequence="Q"
-			hex-codepoint="0C15" type="1" />
-		<char-sequence-mapping ascii-char-sequence="k"
-			hex-codepoint="0C15" type="1" />
+			
+		<char-sequence-mapping ascii-char-sequence="K"
+			hex-codepoint="0C16" type="1" />			
 		<char-sequence-mapping ascsh-char-sequence="kh"
 			hex-codepoint="0C16" type="1" />
+		<char-sequence-mapping ascii-char-sequence="Q"
+			hex-codepoint="0C16" type="1" />
+		<char-sequence-mapping ascii-char-sequence="C"
+			hex-codepoint="0C16" type="1" />
+			
 
 		<char-sequence-mapping ascii-char-sequence="g"
 			hex-codepoint="0C17" type="1" />
@@ -91,13 +94,13 @@
 		<char-sequence-mapping ascii-char-sequence="j"
 			hex-codepoint="0C1C" type="1" />
 		<char-sequence-mapping ascii-char-sequence="J"
-			hex-codepoint="0C1C" type="1" />
+			hex-codepoint="0C1D" type="1" />
 		<char-sequence-mapping ascii-char-sequence="jh"
 			hex-codepoint="0C1D" type="1" />
 
-		<char-sequence-mapping ascii-char-sequence="Z"
-			hex-codepoint="0C1E" type="1" />
 		<char-sequence-mapping ascii-char-sequence="z"
+			hex-codepoint="0C1E" type="1" />
+		<char-sequence-mapping ascii-char-sequence="Z"
 			hex-codepoint="0C1E" type="1" />
 
 		<char-sequence-mapping ascii-char-sequence="th"
@@ -150,6 +153,9 @@
 
 		<char-sequence-mapping ascii-char-sequence="y"
 			hex-codepoint="0C2F" type="1" />
+		<char-sequence-mapping ascii-char-sequence="Y"
+			hex-codepoint="0C2F" type="1" />
+			
 		<char-sequence-mapping ascii-char-sequence="r"
 			hex-codepoint="0C30" type="1" />
 		<char-sequence-mapping ascii-char-sequence="l"
@@ -272,57 +278,15 @@
 			hex-codepoint="0C4C" type="3" />
 
 		<char-sequence-mapping ascii-char-sequence="M"
-			hex-codepoint="0C02" type="2" />
+			hex-codepoint="0C02" type="2" anunasika-or-visarga="true"/>
 		<char-sequence-mapping ascii-char-sequence="M"
-			hex-codepoint="0C02" type="3" />
+			hex-codepoint="0C02" type="3" anunasika-or-visarga="true"/>
 		<char-sequence-mapping ascii-char-sequence="H"
-			hex-codepoint="0C03" type="2" />
+			hex-codepoint="0C03" type="2" anunasika-or-visarga="true"/>
 		<char-sequence-mapping ascii-char-sequence="H"
-			hex-codepoint="0C03" type="3" />
+			hex-codepoint="0C03" type="3" anunasika-or-visarga="true"/>
 
 
-
-		<!-- <char-sequence-mapping ascii-char-sequence="a" hex-codepoint="0C05" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="A" hex-codepoint="0C06" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="aa" hex-codepoint="0C06" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="i" hex-codepoint="0C07" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="I" hex-codepoint="0C08" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="ee" hex-codepoint="0C08" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="u" hex-codepoint="0C09" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="oo" hex-codepoint="0C0A" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="uu" hex-codepoint="0C0A" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="U" hex-codepoint="0C0A" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="R" hex-codepoint="0C0B" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="Roo" hex-codepoint="0C60" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="e" hex-codepoint="0C0E" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="E" hex-codepoint="0C0F" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="ai" hex-codepoint="0C10" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="o" hex-codepoint="0C12" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="O" hex-codepoint="0C13" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="au" hex-codepoint="0C14" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="M" hex-codepoint="0C02" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="H" hex-codepoint="0C03" 
-			type="2" /> <char-sequence-mapping ascii-char-sequence="a" hex-codepoint="0C01" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="A" hex-codepoint="0C3E" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="aa" hex-codepoint="0C3E" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="i" hex-codepoint="0C3F" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="I" hex-codepoint="0C3F" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="ee" hex-codepoint="0C40" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="u" hex-codepoint="0C41" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="oo" hex-codepoint="0C42" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="uu" hex-codepoint="0C42" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="U" hex-codepoint="0C42" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="R" hex-codepoint="0C43" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="RR" hex-codepoint="0C44" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="e" hex-codepoint="0C46" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="E" hex-codepoint="0C47" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="ai" hex-codepoint="0C48" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="o" hex-codepoint="0C4A" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="O" hex-codepoint="0C4B" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="au" hex-codepoint="0C4C" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="M" hex-codepoint="0C02" 
-			type="3" /> <char-sequence-mapping ascii-char-sequence="H" hex-codepoint="0C03" 
-			type="3" /> -->
 	</char-sequence-mappings>
 
 </transliterator-config>

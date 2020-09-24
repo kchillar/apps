@@ -7,16 +7,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.ajoy.etol.config.CharSequenceToCodePointMapping;
 import com.ajoy.etol.config.Settings;
-import com.ajoy.etol.mapper.DefaultCharSequenceMapper;
-import com.ajoy.etol.mapper.EnglishCharSequenceToLanguageMapper;
+import com.ajoy.etol.mapper.TransliterationMapper;
+import com.ajoy.etol.mapper.CharSequenceMapperProvider;
 
 
 /**
@@ -57,20 +55,21 @@ import com.ajoy.etol.mapper.EnglishCharSequenceToLanguageMapper;
  * Finally instances of this class are not thread safe and external sychronization is needed if instance of this class is shared between multiple threads.<br>
  *
  */
-public class EnglishTransliterator
+public class Transliterator
 {
-	private static Logger log = LogManager.getLogger(EnglishTransliterator.class);
+	private static Logger log = LogManager.getLogger(Transliterator.class);
+	public static final String LANGUAGE_TELUGU = "te";
+	public static final String LANGUAGE_HINDI = "hi";
+	
 	private static final char NullChar = '\0';	
 	private static final int BufferSize = 10;		
 	
 
 	/** char mapper used to map ascii sequence to language codepoints */
-	private EnglishCharSequenceToLanguageMapper mapper;
-	private Reader from;	
-	private Writer to;
+	private TransliterationMapper mapper;
+	//private Reader from;	
+	//private Writer to;
 	private StringBuilder outBuffer;
-	private boolean streamMode = false;
-
 
 	/** state variables */
 	private boolean shouldTransliterate = false;
@@ -93,9 +92,14 @@ public class EnglishTransliterator
 	private BufferedWriter phoneticLog;
 	private BufferedWriter codePointLog;
 
-	public EnglishTransliterator()	
+	public static Transliterator getInstance(String languageCode)
+	{
+		return new Transliterator(languageCode);
+	}
+	
+	private Transliterator(String languageCode)	
 	{		
-		this.mapper = new DefaultCharSequenceMapper();
+		this.mapper = CharSequenceMapperProvider.getCharSequenceMapper(languageCode);
 
 		if(mapper.isTransliterationMarkedup())				
 			shouldTransliterate = false;		
@@ -113,92 +117,90 @@ public class EnglishTransliterator
 	}
 
 	
-	public EnglishTransliterator(EnglishCharSequenceToLanguageMapper mapper) throws IOException
-	{		
-		this.mapper = mapper;
-
-		if(mapper.isTransliterationMarkedup())				
-			shouldTransliterate = false;		
-		else			
-			shouldTransliterate = true;		
-		
-		createLogFiles();
-	}
-
-	
 	private void createLogFiles() throws IOException
 	{
 		if(Settings.GeneratePhoneticData)
 			phoneticLog = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("phonetics.txt"))));
-
 		if(Settings.GenerateCodePointsData)
 			codePointLog = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("codepoints.txt")))); 
 	}
-
-	private void closeLogFiles() throws IOException
-	{
-		if(Settings.GeneratePhoneticData)
-		{
-			phoneticLog.flush();
-			phoneticLog.close();
-		}		
-		if(Settings.GenerateCodePointsData)
-		{
-			codePointLog.flush();
-			codePointLog.close();
-		}
-	}
 		
-	public String transliterateString(String input) throws IOException 
+	public String toLanguageString(String phoneticString) throws IOException 
 	{				
-		if(input == null)
-			return input;			
+		if(phoneticString == null)
+			return phoneticString;			
 		outBuffer = new StringBuilder();			
-		for(char c: input.toCharArray())					
+		for(char c: phoneticString.toCharArray())					
 			processAsciChar(c);						
 		processAsciChar(NullChar);
-		String out = outBuffer.toString();		
-		return out;
-	}
-
-
-	public void transliterateStream(Reader input, Writer output) throws IOException 
-	{								
-		this.from = input;
-		this.to = output;
-		streamMode = true;
-		createLogFiles();
+		String languageStr = outBuffer.toString();		
 		
-		long startTime = System.currentTimeMillis();
-		try
-		{
-			startTime = System.currentTimeMillis();
-			do
-			{	
-				int val = from.read();					
-				if(val == -1)
-					break;												
-				processAsciChar((char)val);
-			}
-			while(true);
-			long endTime = System.currentTimeMillis();
-			System.out.println("completed in "+ (endTime-startTime) +" millis seconds.");
-		}
-		finally
-		{
-			try
-			{
-				if(to != null)				
-					to.flush();
+		//if(Settings.EnableLogs)
+		System.out.println("phoneticStr:|"+phoneticString+"|, len:"+phoneticString.length()+", langSring:|"+languageStr+"|, len:"+languageStr.length());
+		
+		return languageStr;
+	}
 
-				closeLogFiles();
-			}
-			catch(Exception io)
-			{
-				io.printStackTrace();
-			}
+	
+	/**
+	 * A language string has following char sequences:<br>
+	 * a) hallu and gunintam <br>
+	 * b) acchu followed by hallu
+	 * c) hallu followed by modifier to indicate the next hallu is a vottu<br>
+	 * 
+	 * If current is hallu and next is another hallu or acchu or other character need to output asci 'a'<br>
+	 * 
+	 * @param languageString
+	 * @return
+	 * @throws IOException
+	 */
+	public String toPhoneticString(String languageString) throws IOException 
+	{				
+		if(languageString == null)
+			return languageString;		
+		char[] c = languageString.toCharArray();
+		CharSequenceToCodePointMapping prev = null;
+		CharSequenceToCodePointMapping curr = null;				
+		outBuffer = new StringBuilder();			
+		
+		for(int i=0; i< c.length; i++)
+		{			
+			 curr = mapper.getAsciSequence((int)c[i]);
+			 processPrev(curr, prev, outBuffer);			 
+			 if(curr != null)
+			 {
+				 System.out.println("Language codepoint c["+i+"] x"+curr.getHexCodepoint()+" type: "+curr.getType()+" mapped asci: '"+curr.getAsciiCharSequence()+"'");													 
+				 if(curr.getAsciiCharSequence() != null)
+					 outBuffer.append(curr.getAsciiCharSequence());								 
+			 }
+			 else
+			 {
+				 outBuffer.append(c[i]);
+			 }
+			 prev = curr;
+			 curr = null;			 
+		}	
+		
+		processPrev(curr, prev, outBuffer);
+		String phoneticString = outBuffer.toString();	
+		
+		//if(Settings.EnableLogs)
+		System.out.println("langStr:|"+languageString+"|, len:"+languageString.length()+", phoneticStr:|"+phoneticString+"|, len:"+phoneticString.length());
+
+		return phoneticString;
+	}
+
+	private void processPrev(CharSequenceToCodePointMapping curr, CharSequenceToCodePointMapping prev, StringBuilder buff)
+	{
+		//if (current is other or hallu or acchu) and (prev is hallu) add 'a'
+		if( (curr == null || curr.getType() == CharSequenceToCodePointMapping.Hallu || curr.getType() == CharSequenceToCodePointMapping.Acchu)				
+				&& (prev !=null && prev.getType() == CharSequenceToCodePointMapping.Hallu))
+		{
+			System.out.println("adding 'a'");
+			buff.append('a');
 		}
 	}
+
 
 	/**
 	 *    
@@ -312,23 +314,18 @@ public class EnglishTransliterator
 
 	private final void outputChar(char aChar) throws IOException
 	{
-		if(!streamMode)
-			outBuffer.append(aChar);
-		else	
-			to.write(aChar);
+		outBuffer.append(aChar);
 		
 		if(Settings.GeneratePhoneticData)
 		{
-			phoneticLog.write(aChar);
-			if(!streamMode)
-				phoneticLog.flush();	
+			phoneticLog.write(aChar);	
+			phoneticLog.flush();	
 		}
 		
 		if(Settings.GenerateCodePointsData)
 		{
 			codePointLog.write(aChar);
-			if(!streamMode)
-				codePointLog.flush();
+			codePointLog.flush();
 		}
 	}
 	
@@ -340,9 +337,9 @@ public class EnglishTransliterator
 
 	private final void processOther(char currChar) throws IOException
 	{
-		if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Consonant)
+		if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Hallu)
 		{
-			outputChar((char)mapper.getVisarga());			
+			outputChar((char)mapper.getModifierCodepoint());			
 		}
 		
 		if(currChar != NullChar)
@@ -408,7 +405,6 @@ public class EnglishTransliterator
 	}
 
 
-
 	private void outputHallus() throws IOException
 	{
 		if(Settings.EnableLogs)
@@ -422,19 +418,17 @@ public class EnglishTransliterator
 			CharSequenceToCodePointMapping ls = null;
 
 			if(i>0)				
-				outputChar((char)mapper.getVisarga());
+				outputChar((char)mapper.getModifierCodepoint());
 
 			ls = mapper.getConsonantSymbol(keys[i]);
 
 			if(ls != null)
 			{
-				for(int cp: ls.getCodepoints())
-					outputChar((char)cp);
-
+				outputChar((char)ls.getCodepoint());
 				if(Settings.GenerateCodePointsData)				
 					codePointLog.write(ls.getHexCodepoint()+"|");				
 			}			
-			lastOutputtedKeyType = CharSequenceToCodePointMapping.Consonant;
+			lastOutputtedKeyType = CharSequenceToCodePointMapping.Hallu;
 		}				
 	}
 
@@ -450,26 +444,24 @@ public class EnglishTransliterator
 
 			CharSequenceToCodePointMapping ls = null;
 
-			if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Consonant)
+			if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Hallu)
 			{										
 				ls = mapper.getConsonantSymbol(keys[i]);
 				if(ls.getHexCodepoint().equals("0C01"))//ignore 'a' after consonant as the consonant symbol is default
 					ls = null;
 			}
-			else if ((lastOutputtedKeyType == CharSequenceToCodePointMapping.Other) || (lastOutputtedKeyType == CharSequenceToCodePointMapping.Vowel))
+			else if ((lastOutputtedKeyType == CharSequenceToCodePointMapping.Other) || (lastOutputtedKeyType == CharSequenceToCodePointMapping.Acchu))
 			{
 				ls = mapper.getVowelSymbol(keys[i]);
 			}
 
 			if(ls != null)
 			{
-				for(int cp: ls.getCodepoints())
-					outputChar((char)cp);
-
+				outputChar((char)ls.getCodepoint());
 				if(Settings.GenerateCodePointsData)
 					codePointLog.write(ls.getHexCodepoint()+"|");				
 			}
-			lastOutputtedKeyType = CharSequenceToCodePointMapping.Vowel;
+			lastOutputtedKeyType = CharSequenceToCodePointMapping.Acchu;
 		}	
 	}
 
@@ -481,6 +473,20 @@ public class EnglishTransliterator
 		
 		if(Settings.EnableLogs)
 			log.debug(msg+" => "+buff.toString());
+	}
+
+	public void closeLogFiles() throws IOException
+	{
+		if(Settings.GeneratePhoneticData)
+		{
+			phoneticLog.flush();
+			phoneticLog.close();
+		}		
+		if(Settings.GenerateCodePointsData)
+		{
+			codePointLog.flush();
+			codePointLog.close();
+		}
 	}
 
 	private boolean isAsciiCharPartOfHallulu(int c)

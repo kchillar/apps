@@ -1,0 +1,7 @@
+<char-sequence-mapper-provider-config>
+	<language name="Telugu" code="te" />
+	<!--
+	<language name="Hindi" code="hi" /> 
+	<language name="Tamil" code="ta" />
+	 -->		
+</char-sequence-mapper-provider-config>

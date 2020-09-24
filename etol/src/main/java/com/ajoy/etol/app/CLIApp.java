@@ -1,29 +1,19 @@
 package com.ajoy.etol.app;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Writer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.ajoy.etol.EnglishTransliterator;
-import com.ajoy.etol.LanguageTransliterator;
-import com.ajoy.etol.mapper.DefaultCharSequenceMapper;
+import com.ajoy.etol.Transliterator;
+import com.ajoy.etol.mapper.CharSequenceMapperProvider;
 
 /**
  * 
@@ -36,6 +26,8 @@ public class CLIApp
 	
 	public static void main(String[] args) throws Exception
 	{
+		CharSequenceMapperProvider.init();
+		
 		String outputFile = "e2l-out.html";
 		
 		if(args.length == 0)
@@ -59,7 +51,7 @@ public class CLIApp
 			else if(args[2].equalsIgnoreCase("L2E"))
 			{
 				log.info("Transliterationg from Language");
-				processLtoEFiles(args[0], args[1]);
+				//processLtoEFiles(args[0], args[1]);
 			}
 		}		
 		else
@@ -72,34 +64,55 @@ public class CLIApp
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter pr = new PrintWriter(new File(outputFile));
-		DefaultCharSequenceMapper mapper = new DefaultCharSequenceMapper();
-		mapper.setTransliterationMarkedup(false);
-		EnglishTransliterator et = new EnglishTransliterator(mapper);
+		Transliterator et = Transliterator.getInstance(Transliterator.LANGUAGE_TELUGU);
+		
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		
+		for(String fontFamily: ge.getAvailableFontFamilyNames())
+			System.out.println("FontFamilyName: "+fontFamily);
+
+		for(Font font: ge.getAllFonts())
+			System.out.println("Name: "+font.getName()+" NumGlyphs: "+font.getNumGlyphs()+" fontName:"+font.getFontName()+" fontFamily:"+font.getFamily());
+
+		
+		
 		while(true)
 		{
 			System.out.print("e2l> ");
-			String line = br.readLine();
-			String out = et.transliterateString(line);
+			String line1 = br.readLine();
+			String out   = et.toLanguageString(line1);
+			String line2 = et.toPhoneticString(out);
+			
+			System.out.println("|"+line1+"|");
+			System.out.println("|"+out+"|");
+			System.out.println("|"+line2+"|");
+									
 			pr.println(out);
-			System.out.println(out);
 			pr.flush();
 		}
+		
+		//pr.close();
 	}
 		
 	public static void processEtoLFiles(String inputFile, String outputFile) throws IOException
 	{
 		System.out.println("Starting E2L Processing from input: "+inputFile+" and will output to : "+outputFile);
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));
-		BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputFile))));
+		PrintWriter wr = new PrintWriter(new File(outputFile));		
+		Transliterator lst = Transliterator.getInstance(Transliterator.LANGUAGE_TELUGU);
+		String line;
 		
-		//DefaultCharSequenceMapper mapper = new DefaultCharSequenceMapper();
-		
-		EnglishTransliterator lst = new EnglishTransliterator();						
-		lst.transliterateStream(br, wr);				
+		while( (line = br.readLine()) != null)
+		{
+			String out = lst.toLanguageString(line);
+			wr.println(out);			
+		}
+						
 		wr.close();
 		br.close();
 	}
 
+	/*
 	public static void processLtoEFiles(String inputFile, String outputFile) throws IOException
 	{
 		InputStream fis = new BufferedInputStream(new FileInputStream(new File(inputFile)));		
@@ -108,7 +121,8 @@ public class CLIApp
 		lst.start();		
 		out.close();
 		fis.close();
-	}	
+	}
+	*/	
 }
 
 
