@@ -11,10 +11,10 @@ import java.io.PrintWriter;
  */
 public class InvestmentOutput 
 {
-	private long paymentAmount = 840000;
-	private int totalTerm = 10;
-	private int investTerm = 5;
-	private double interestRatePerYear = 5;
+	private long paymentAmount = 100;
+	private int totalTerm = 12;
+	private int investTerm = 10;
+	private double interestRatePerYear = 12;
 
 	double[] interestRateInYear = new double[totalTerm];
 	double[][] investAmount = new double[totalTerm][investTerm];
@@ -25,8 +25,11 @@ public class InvestmentOutput
 		setupInterestRates();
 	}
 
-	public InvestmentOutput(double interestRate)
+	public InvestmentOutput(long termAmount, int terms, int paymentTerms, double interestRate)
 	{		
+                paymentAmount = termAmount;
+                totalTerm = terms;
+		investTerm = paymentTerms;
 		interestRatePerYear = interestRate;
 		setupInterestRates();
 	}
@@ -185,16 +188,15 @@ public class InvestmentOutput
 
 	public static void main(String[] args) throws IOException
 	{
-		double base = 7;
-		InvestmentOutput io ;
+	        System.out.println("Need four arguments: AmountPerTerm TotalTerms NumberOfPaymentTerms ratePerYear");	
+		long perTermAmount = Long.parseLong(args[0]);
+                int totalTerms = Integer.parseInt(args[1]);
+		int noOfPaymentTerms = Integer.parseInt(args[2]);
+                double ratePerYear = Double.parseDouble(args[3]);
 
-		for(int i=0; i< 3; i++)
-		{
-			io = new InvestmentOutput(base+i);
-			io.computeAmounts();
-			io.displayAmountTable2();
-			//io.generateAmountsFile();
-		}
+		InvestmentOutput io = new InvestmentOutput(perTermAmount, totalTerms, noOfPaymentTerms, ratePerYear);
+		io.computeAmounts();
+		io.displayAmountTable2();
 	}
 }
 

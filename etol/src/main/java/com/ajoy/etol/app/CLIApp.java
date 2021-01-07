@@ -27,6 +27,7 @@ public class CLIApp
 	public static void main(String[] args) throws Exception
 	{
 		CharSequenceMapperProvider.init();
+		E2LUtil.init();
 		
 		String outputFile = "e2l-out.html";
 		
@@ -43,15 +44,15 @@ public class CLIApp
 		}
 		else if(args.length == 3)
 		{
-			if(args[2].equalsIgnoreCase("E2L"))
+			if(args[0].equalsIgnoreCase("E2L"))
 			{
 				log.info("Transliterationg from English");
-				processEtoLFiles(args[0], args[1]);
+				processEtoLFiles(args[1], args[2]);
 			}
-			else if(args[2].equalsIgnoreCase("L2E"))
+			else if(args[0].equalsIgnoreCase("L2E"))
 			{
 				log.info("Transliterationg from Language");
-				//processLtoEFiles(args[0], args[1]);
+				//processLtoEFiles(args[1], args[2]);
 			}
 		}		
 		else

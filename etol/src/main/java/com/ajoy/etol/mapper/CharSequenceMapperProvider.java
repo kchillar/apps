@@ -58,7 +58,8 @@ public class CharSequenceMapperProvider
 					TransliteratorConfig mapperConfig = (TransliteratorConfig) XMLHelper.getObjectFromInputStream(TransliteratorConfig.class, in);
 					in.close();					
 					TransliterationMapper mapper = new TransliterationMapperImpl(mapperConfig);	
-					((TransliterationMapperImpl)mapper).setTransliterationMarkedup(false);
+					System.out.println("Check here for markup hardcoding");
+					//((TransliterationMapperImpl)mapper).setTransliterationMarkedup(false);
 					map.put(lInfo.getCode(), mapper);
 				}
 			}

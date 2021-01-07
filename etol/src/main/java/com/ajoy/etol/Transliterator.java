@@ -144,11 +144,11 @@ public class Transliterator
 	
 	/**
 	 * A language string has following char sequences:<br>
-	 * a) hallu and gunintam <br>
-	 * b) acchu followed by hallu
-	 * c) hallu followed by modifier to indicate the next hallu is a vottu<br>
+	 * a) Hallu and Gunintam <br>
+	 * b) Acchu followed by Hallu
+	 * c) Hallu followed by modifier to indicate the next Hallu is a Vottu<br>
 	 * 
-	 * If current is hallu and next is another hallu or acchu or other character need to output asci 'a'<br>
+	 * If ((current is Hallu OR Acchu OR other character) AND (previous is Hallu)) need to output addtional asci 'a' before current asci<br>
 	 * 
 	 * @param languageString
 	 * @return
@@ -192,7 +192,7 @@ public class Transliterator
 
 	private void processPrev(CharSequenceToCodePointMapping curr, CharSequenceToCodePointMapping prev, StringBuilder buff)
 	{
-		//if (current is other or hallu or acchu) and (prev is hallu) add 'a'
+		//If ((prev is Hallu) AND (Current is another Hallu OR Acchu OR other character)) need to output asci 'a' before current
 		if( (curr == null || curr.getType() == CharSequenceToCodePointMapping.Hallu || curr.getType() == CharSequenceToCodePointMapping.Acchu)				
 				&& (prev !=null && prev.getType() == CharSequenceToCodePointMapping.Hallu))
 		{
