@@ -53,6 +53,9 @@ public class UIApp extends JFrame implements ActionListener
 		try 
 		{
 			textArea = new JTextArea();
+			textArea.setColumns(100);
+			textArea.setLineWrap(true);
+			textArea.setWrapStyleWord(true);
 			transliterator = Transliterator.getInstance(currentLanguage);
 			handler = new UIActionHandler(this, textArea, textField, transliterator);			
 			textArea.setText("Welcome to E2L - Editor");
@@ -135,6 +138,8 @@ public class UIApp extends JFrame implements ActionListener
 	
 	public void actionPerformed(ActionEvent e) 
 	{ 
+		System.out.println("Got Action: "+e.getActionCommand());
+		
 		String s = e.getActionCommand(); 
 
 		if (s.equals("Open")) 

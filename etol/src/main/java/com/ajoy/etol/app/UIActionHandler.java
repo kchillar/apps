@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,6 +28,8 @@ import com.ajoy.etol.Transliterator;
  */
 public class UIActionHandler implements KeyListener
 {	
+	private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd aa hh:mm:ss");
+	
 	private static Logger log = LogManager.getLogger(UIActionHandler.class);
 	private JFrame parent;	
 	private JTextArea textArea;
@@ -56,8 +60,8 @@ public class UIActionHandler implements KeyListener
 			while((line = br.readLine())!=null)			
 				textArea.append(line+"\n");			
 			br.close();
-
-			System.out.println(file.getPath()+" has lines: "+textArea.getLineCount());
+			
+			displayMsg("Opened file: "+file.getPath()+" size: "+file.length()+" lines: "+textArea.getLineCount());
 			return true;			
 		} 
 		catch (Exception evt) 
@@ -80,7 +84,7 @@ public class UIActionHandler implements KeyListener
 			w.write(document.getText(document.getStartPosition().getOffset(), document.getEndPosition().getOffset()));				
 			w.flush(); 
 			w.close();
-			textField.setText("Wrote file: "+file.getPath()+" size: "+file.length());			
+			displayMsg("Saved file: "+file.getPath()+" size: "+file.length()); 			
 		} 
 		catch (Exception evt) 
 		{ 
@@ -137,15 +141,16 @@ public class UIActionHandler implements KeyListener
 	{		
 		if((e.getKeyCode() == KeyEvent.VK_SPACE))
 		{
-			if(cntrlPressed)
-			{
-				//textField.setText("0) cntrlPressed: "+cntrlPressed+", altPressed: "+altPressed+", SPACE");			
-				transliterate(true);
-			}
-			else if(altPressed)
+			if(altPressed)
 			{
 				//textField.setText("1) cntrlPressed: "+cntrlPressed+", altPressed: "+altPressed+", SPACE");				
-				transliterate(false);
+				transliterate(false, '\0');
+			}			
+			else //if(cntrlPressed)
+			{
+				//textField.setText("0) cntrlPressed: "+cntrlPressed+", altPressed: "+altPressed+", SPACE");			
+				transliterate(true, '\0');
+				//transliterate(true, ' ');
 			}
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_ALT)
@@ -175,7 +180,7 @@ public class UIActionHandler implements KeyListener
 	}
 
 
-	private void transliterate(boolean fromAsciToLanguage)
+	private void transliterate(boolean fromAsciToLanguage, char appendChar)
 	{		
 		try
 		{			
@@ -225,6 +230,10 @@ public class UIActionHandler implements KeyListener
 					newStr = transliterator.toLanguageString(oldStr);
 				else
 					newStr = transliterator.toPhoneticString(oldStr);		
+				
+				if(appendChar != '\0')
+					newStr = newStr + appendChar;
+				
 				//System.out.println("oldStr:|"+oldStr+"| sp: "+sp+", st:"+st+", ln:"+ln);
 				//System.out.println("newStr:|"+newStr+"| sp: "+sp+", st:"+st+", ln:"+newStr.length());
 				textArea.getDocument().remove(sp+st, ln);				
@@ -232,7 +241,7 @@ public class UIActionHandler implements KeyListener
 			}
 			else
 			{
-				textField.setText("Old: '"+null);
+				displayMsg("Old: null");				
 			}
 		}
 		catch(Exception exp)
@@ -241,4 +250,10 @@ public class UIActionHandler implements KeyListener
 		}		
 	}
 
+	
+	private final void displayMsg(String msg)
+	{
+		textField.setText("["+dateFormatter.format(new Date())+"] "+msg);
+	}
+	
 }
