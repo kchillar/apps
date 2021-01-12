@@ -3,6 +3,7 @@ package com.ajoy.etol.app;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +54,9 @@ public class UIApp extends JFrame implements ActionListener
 		try 
 		{
 			textArea = new JTextArea();
-			textArea.setColumns(100);
+			//textArea.setColumns(100);
+			textArea.setFont(textArea.getFont().deriveFont(16f));
+			
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
 			transliterator = Transliterator.getInstance(currentLanguage);
