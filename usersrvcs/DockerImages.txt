@@ -1,0 +1,6 @@
+REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
+usersrvcs     1.0            ec29befc4d84   8 minutes ago   141MB
+simdb         1.0            42b523d13bbd   2 days ago      37.2MB
+postgres      9.6-alpine     67ff6cfc14c1   3 weeks ago     37.2MB
+hello-world   latest         bf756fb1ae65   14 months ago   13.3kB
+openjdk       8-jdk-alpine   a3562aa0b991   22 months ago   105MB
