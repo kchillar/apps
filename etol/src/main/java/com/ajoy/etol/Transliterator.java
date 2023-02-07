@@ -43,12 +43,18 @@ import com.ajoy.etol.mapper.CharSequenceMapperProvider;
  * 
  * The consonant buffer is processed if:<br>
  * a) the buffer reaches the limit<br>
- * b)  the asci char encountered is vowel or other char<br>
+ * b) the asci char encountered is vowel or other char<br>
  * 
  * Both the vowel buffer and the consonant buffers are processed if char encountered is other.<br>
- * a) if the last char before other char, is vowel, consonant buffer is processed and then vowel buffer<br>
- * b) if the last char before other char, is consonant, vowel buffer is processed and then consonant buffer<br> 
+ * a) if the last char before other char, is vowel, consonant buffer is processed and then the vowel buffer<br>
+ * b) if the last char before other char, is consonant, vowel buffer is processed and then the consonant buffer<br> 
  * 
+ * 
+ * Processing of a vowel or consonant buffer involves:
+ * a) lookup of a language unicode (using mapper) associated with the complete sequence of the asci chars in the buffer<br>
+ * b) writing the language unicode to the language output buffer<br>
+ * c) and resetting the buffer<br>
+ *  
  * A flag, shouldTransliterate is set/unset based conditions encountered like, initial configuration, encountering of chars which <br>
  * represent start of markup and end of markup.<br> 
  * 
@@ -196,7 +202,7 @@ public class Transliterator
 		if( (curr == null || curr.getType() == CharSequenceToCodePointMapping.Hallu || curr.getType() == CharSequenceToCodePointMapping.Acchu)				
 				&& (prev !=null && prev.getType() == CharSequenceToCodePointMapping.Hallu))
 		{
-			System.out.println("adding 'a'");
+			//System.out.println("adding 'a'");
 			buff.append('a');
 		}
 	}
@@ -360,14 +366,14 @@ public class Transliterator
 
 			if(i <= achuIndx - 2)
 			{
-				ls = mapper.getVowelSymbol(new String(achu, i, 2));			  	
+				ls = mapper.getLanguageAcchuUnicode(new String(achu, i, 2));			  	
 				if(ls != null)								
 					i = i+1; 				
 				else				
-					ls = mapper.getVowelSymbol(achu[i]+"");				
+					ls = mapper.getLanguageAcchuUnicode(achu[i]+"");				
 			}
 			else			
-				ls = mapper.getVowelSymbol(achu[i]+"");
+				ls = mapper.getLanguageAcchuUnicode(achu[i]+"");
 
 			if(ls != null)			
 				keys[keyIndx++] = ls.getAsciiCharSequence();											
@@ -388,14 +394,14 @@ public class Transliterator
 
 			if(i <= halluIndx - 2)
 			{
-				ls = mapper.getConsonantSymbol(new String(hallu, i, 2));			  	
+				ls = mapper.getLanguageHalluUnicode(new String(hallu, i, 2));			  	
 				if(ls != null)								
 					i = i+1;				
 				else				
-					ls = mapper.getConsonantSymbol(hallu[i]+"");				
+					ls = mapper.getLanguageHalluUnicode(hallu[i]+"");				
 			}
 			else			
-				ls = mapper.getConsonantSymbol(hallu[i]+"");
+				ls = mapper.getLanguageHalluUnicode(hallu[i]+"");
 
 			if(ls != null)			
 				keys[keyIndx++] = ls.getAsciiCharSequence();							
@@ -420,7 +426,7 @@ public class Transliterator
 			if(i>0)				
 				outputChar((char)mapper.getModifierCodepoint());
 
-			ls = mapper.getConsonantSymbol(keys[i]);
+			ls = mapper.getLanguageHalluUnicode(keys[i]);
 
 			if(ls != null)
 			{
@@ -446,13 +452,13 @@ public class Transliterator
 
 			if(lastOutputtedKeyType == CharSequenceToCodePointMapping.Hallu)
 			{										
-				ls = mapper.getConsonantSymbol(keys[i]);
+				ls = mapper.getLanguageHalluUnicode(keys[i]);
 				if(ls.getHexCodepoint().equals("0C01"))//ignore 'a' after consonant as the consonant symbol is default
 					ls = null;
 			}
 			else if ((lastOutputtedKeyType == CharSequenceToCodePointMapping.Other) || (lastOutputtedKeyType == CharSequenceToCodePointMapping.Acchu))
 			{
-				ls = mapper.getVowelSymbol(keys[i]);
+				ls = mapper.getLanguageAcchuUnicode(keys[i]);
 			}
 
 			if(ls != null)

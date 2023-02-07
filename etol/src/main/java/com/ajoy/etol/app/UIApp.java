@@ -3,8 +3,6 @@ package com.ajoy.etol.app;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -147,13 +145,22 @@ public class UIApp extends JFrame implements ActionListener
 
 		if (s.equals("Open")) 
 		{ 
-			File file = fileDialogue(true);				
+			File file = fileDialogue(true);			
+			
+			System.out.println("got file: "+file.getPath());
+			
+			lastFileDialogDir = file.getParentFile();				
+			if(handler.handleFileOpen(file))
+				currentFile = file;
+
+			/*
 			if(file !=null && file.isFile() && file.exists())
 			{
 				lastFileDialogDir = file.getParentFile();				
 				if(handler.handleFileOpen(file))
 					currentFile = file;
 			}
+			*/
 		} 
 		else if (s.equals("Save")) 
 		{ 

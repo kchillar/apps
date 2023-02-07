@@ -1,23 +1,27 @@
 
 <transliterator-config modifier="0C4D" is-transliteration-markedup="false">
 
-	<markup-start>&lt;%</markup-start>
-	<markup-end>%&gt;</markup-end>
+	<markup-start>{</markup-start>
+	<markup-end>}</markup-end>
 
+	<!-- Example of ka gunintham generation sequence -->
+	<!-- ka kaa ki kee ku koo kR kRU ke kE kai ko kO kau kaM kaH  -->
+    <!-- ka kA ki kI ku koo kR kRU ke kE kai ko kO kau kaM kaH  -->
+    
 	<vowel-sound-chars>
 		<char>a</char>
-		<char>A</char>		
-		<char>e</char>
-		<char>E</char>		
-		<char>i</char>
-		<char>I</char>		
+		<char>A</char>
+		<char>i</char>				
+		<char>I</char>		        				
+		<char>u</char>
 		<char>o</char>
-		<char>O</char>		
-		<char>u</char>				
+		<char>O</char>						
+		<char>e</char>
+		<char>E</char>				
+		<char>R</char>		
+		<char>U</char>		
+		<char>M</char>				
 		<char>H</char>		
-		<char>m</char>		
-		<char>R</char>
-		<char>U</char>
 	</vowel-sound-chars>
 
 	<consonant-sound-chars>
@@ -38,7 +42,7 @@
 		<char>K</char>
 		<char>l</char>
 		<char>L</char>
-		<char>M</char>
+		<char>m</char>
 		<char>n</char>
 		<char>N</char>
 		<char>p</char>
@@ -149,7 +153,7 @@
 			hex-codepoint="0C2D" type="1" />
 		<char-sequence-mapping ascii-char-sequence="bh"
 			hex-codepoint="0C2D" type="1" />
-		<char-sequence-mapping ascii-char-sequence="M"
+		<char-sequence-mapping ascii-char-sequence="m"
 			hex-codepoint="0C2E" type="1" />
 
 		<char-sequence-mapping ascii-char-sequence="y"
@@ -278,9 +282,9 @@
 		<char-sequence-mapping ascii-char-sequence="au"
 			hex-codepoint="0C4C" type="3" />
 
-		<char-sequence-mapping ascii-char-sequence="m"
+		<char-sequence-mapping ascii-char-sequence="M"
 			hex-codepoint="0C02" type="2" anunasika-or-visarga="true"/>
-		<char-sequence-mapping ascii-char-sequence="m"
+		<char-sequence-mapping ascii-char-sequence="M"
 			hex-codepoint="0C02" type="3" anunasika-or-visarga="true"/>
 		<char-sequence-mapping ascii-char-sequence="H"
 			hex-codepoint="0C03" type="2" anunasika-or-visarga="true"/>

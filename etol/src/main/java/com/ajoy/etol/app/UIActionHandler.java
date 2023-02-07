@@ -55,18 +55,29 @@ public class UIActionHandler implements KeyListener
 				return false;		
 
 			textArea.setText("");			
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line;					
-			while((line = br.readLine())!=null)			
-				textArea.append(line+"\n");			
-			br.close();
 			
-			displayMsg("Opened file: "+file.getPath()+" size: "+file.length()+" lines: "+textArea.getLineCount());
-			return true;			
+			if(!file.exists())
+			{
+				file.createNewFile();
+				displayMsg("file: "+file.getPath()+" does not exist, created new");
+				textArea.setCaretPosition(0);
+			}
+			else
+			{
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				String line;					
+				while((line = br.readLine())!=null)			
+				textArea.append(line+"\n");			
+				br.close();			
+				displayMsg("Opened file: "+file.getPath()+" size: "+file.length()+" lines: "+textArea.getLineCount());
+			}
+			
+			return true;
 		} 
 		catch (Exception evt) 
 		{ 
 			JOptionPane.showMessageDialog(parent, evt.getMessage()); 
+			evt.printStackTrace();
 			return false;
 		} 
 		finally
@@ -188,7 +199,10 @@ public class UIActionHandler implements KeyListener
 			int lno = textArea.getLineOfOffset(cp);
 			int sp = textArea.getLineStartOffset(lno);
 			int ep = textArea.getLineEndOffset(lno);
-			String line = textArea.getSelectedText(); 						
+			String line = textArea.getSelectedText(); 	
+			
+			System.out.println("cp: "+cp+", lno: "+lno+", sp: "+sp+", ep: "+ep+", line: "+line);
+			
 			char[] arr = null;
 			int st = 0;
 			int ln = 0;
@@ -196,12 +210,11 @@ public class UIActionHandler implements KeyListener
 			String newStr = null;
 
 			if(line == null)
-			{
-				line = textArea.getText(sp, ep-sp);			
+			{				
+				line = textArea.getText(sp, ep-sp);										
 				arr = line.toCharArray();
-				int ci = cp - sp;
-				System.out.println("ci: "+ci);
-				if(ci > 0)
+				int ci = cp - sp;			
+				if(ci > 0 && ci<arr.length)
 				{
 					while(Character.isWhitespace(arr[ci]))				
 						ci--;
@@ -229,15 +242,18 @@ public class UIActionHandler implements KeyListener
 				if(fromAsciToLanguage)
 					newStr = transliterator.toLanguageString(oldStr);
 				else
-					newStr = transliterator.toPhoneticString(oldStr);		
-				
+					newStr = transliterator.toPhoneticString(oldStr);	
+												
 				if(appendChar != '\0')
 					newStr = newStr + appendChar;
 				
 				//System.out.println("oldStr:|"+oldStr+"| sp: "+sp+", st:"+st+", ln:"+ln);
 				//System.out.println("newStr:|"+newStr+"| sp: "+sp+", st:"+st+", ln:"+newStr.length());
+				
+				System.out.println(oldStr+" == "+ newStr);
 				textArea.getDocument().remove(sp+st, ln);				
 				textArea.getDocument().insertString(sp+st, newStr, null);
+				
 			}
 			else
 			{

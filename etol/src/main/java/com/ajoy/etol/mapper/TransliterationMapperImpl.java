@@ -160,7 +160,7 @@ public class TransliterationMapperImpl implements TransliterationMapper
 	}
 
 
-	public CharSequenceToCodePointMapping getVowelSymbol(String asciiCharSequence) 
+	public CharSequenceToCodePointMapping getLanguageAcchuUnicode(String asciiCharSequence) 
 	{
 		if(Settings.EnableLogs)
 			log.debug("vowl-key: "+asciiCharSequence);
@@ -175,7 +175,7 @@ public class TransliterationMapperImpl implements TransliterationMapper
 		return sy;
 	}
 
-	public CharSequenceToCodePointMapping getConsonantSymbol(String asciiCharSequence) 
+	public CharSequenceToCodePointMapping getLanguageHalluUnicode(String asciiCharSequence) 
 	{		
 		if(Settings.EnableLogs)
 			log.debug("cons-key: "+asciiCharSequence);
